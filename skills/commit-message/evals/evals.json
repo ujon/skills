@@ -1,0 +1,45 @@
+{
+  "skill_name": "commit-message",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write a commit message for the staged changes.",
+      "expected_output": "A commit message following the canonical format: imperative title with issue number from branch, Summary section, Changes section grouped by layer with backtick-wrapped class names.",
+      "files": [],
+      "expectations": [
+        "Title starts with an imperative verb (Add, Fix, Improve, etc.) without type prefix",
+        "Title includes issue number extracted from branch name (#18)",
+        "Summary section exists with why and what bullets",
+        "Changes section groups by layer (API, Application, Domain, Infrastructure, etc.)",
+        "Class names are wrapped in backticks",
+        "Output contains ONLY the commit message, no explanation or code fences"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I want to amend the previous commit with additional staged changes. Write the amend commit message combining both.",
+      "expected_output": "A single commit message that covers both the original HEAD commit changes (form validation) and the newly staged changes (email validation, loading state), not just the delta.",
+      "files": [],
+      "expectations": [
+        "Message covers both the original commit changes (form validation) AND the new staged changes (email validation, loading state)",
+        "Title starts with an imperative verb without type prefix",
+        "Title includes issue number (#27)",
+        "Output contains ONLY the commit message, no explanation or code fences",
+        "Does not describe only the new delta - describes the combined result"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Generate an AI commit message prompt for IntelliJ IDEA that I can paste into JetBrains IDE settings.",
+      "expected_output": "A self-contained prompt using JetBrains template variables ($GIT_DIFF, $GIT_BRANCH_NAME, etc.) with commit format rules embedded, ready to paste into IDE settings.",
+      "files": [],
+      "expectations": [
+        "Prompt contains JetBrains template variable $GIT_DIFF",
+        "Prompt contains JetBrains template variable $GIT_BRANCH_NAME",
+        "Prompt includes commit format rules (imperative mood, no type prefix, issue number)",
+        "Prompt is self-contained and ready to copy-paste",
+        "Prompt instructs to output only the commit message"
+      ]
+    }
+  ]
+}
