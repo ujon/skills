@@ -1,7 +1,0 @@
-{
-  "name": "ujon-skills",
-  "description": "Architecture and development skills by ujon",
-  "skills": [
-    "./skills/kotlin-springboot-hexagonal-architecture"
-  ]
-}

@@ -1,0 +1,19 @@
+{
+  "name": "ujon",
+  "owner": {
+    "name": "Yoo Jongho",
+    "email": "ujon94@gmail.com"
+  },
+  "metadata": {
+    "description": "Architecture and development skills by ujon",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "kotlin-springboot-hexagonal",
+      "description": "Architecture guide for Kotlin + Spring Boot projects using hexagonal (ports & adapters) architecture",
+      "source": "./",
+      "skills": ["./skills/kotlin-springboot-hexagonal"]
+    }
+  ]
+}

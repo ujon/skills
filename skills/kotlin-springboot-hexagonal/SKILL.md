@@ -1,5 +1,5 @@
 ---
-name: kotlin-springboot-hexagonal-architecture
+name: kotlin-springboot-hexagonal
 description: >
   Architecture guide for Kotlin + Spring Boot projects using hexagonal (ports & adapters) architecture
   with a modular monolith structure. Use this skill whenever creating new features, modules, use cases,
