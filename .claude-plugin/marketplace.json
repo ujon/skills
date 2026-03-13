@@ -14,6 +14,18 @@
       "description": "Architecture guide for Kotlin + Spring Boot projects using hexagonal (ports & adapters) architecture",
       "source": "./",
       "skills": ["./skills/kotlin-springboot-hexagonal"]
+    },
+    {
+      "name": "k-research-note",
+      "description": "Korean government R&D research note (Lab Notebook) generator compliant with 국가연구개발혁신법, with HWPX/DOCX/PDF/Markdown output support",
+      "source": "./",
+      "skills": ["./skills/k-research-note", "./skills/hwpx"]
+    },
+    {
+      "name": "hwpx",
+      "description": "HWPX (Hancom/한컴오피스) document creation, reading, and editing for Korean government and public institution submissions",
+      "source": "./",
+      "skills": ["./skills/hwpx"]
     }
   ]
 }
