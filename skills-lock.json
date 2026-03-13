@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "k-research-note": {
+      "source": "ujon/skills",
+      "sourceType": "github",
+      "computedHash": "8d1e26ae5713f7da53ea6f47ae05f528db0029dac523841296d79769421f8d16"
+    },
     "skill-creator": {
       "source": "anthropics/skills",
       "sourceType": "github",
