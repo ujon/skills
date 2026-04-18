@@ -76,12 +76,14 @@ Ask if not clear. Supported: JetBrains (IntelliJ, WebStorm, PyCharm, etc.), VS C
 ### Step 2 — Read references
 
 Read both reference files to build the prompt:
+
 - `references/commit-format.md` — The commit message format rules and examples to embed in the prompt
 - `references/ide-variables.md` — The target IDE's template variables and configuration format
 
 ### Step 3 — Generate the prompt
 
 Build a self-contained prompt that:
+
 1. Uses the IDE's native template variables (e.g., `$GIT_DIFF` for IntelliJ, `${gitDiff}` for VS Code)
 2. Includes the commit format rules from `commit-format.md` condensed into the prompt
 3. Matches the IDE's configuration format (plain text for JetBrains, JSON for VS Code, etc.)

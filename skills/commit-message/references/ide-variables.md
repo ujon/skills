@@ -18,18 +18,21 @@ This file documents the template variables and configuration methods for each ma
 ## JetBrains IDEs (IntelliJ, WebStorm, PyCharm, etc.) {#jetbrains}
 
 ### Where to configure
+
 Settings → Version Control → Commit → AI Commit Message prompt (or custom AI Assistant prompt)
 
 ### Available variables
-| Variable | Description |
-|----------|-------------|
-| `$GIT_BRANCH_NAME` | Current branch name |
-| `$GIT_DIFF` | Staged diff content |
+
+| Variable              | Description                                |
+| --------------------- | ------------------------------------------ |
+| `$GIT_BRANCH_NAME`    | Current branch name                        |
+| `$GIT_DIFF`           | Staged diff content                        |
 | `$GIT_COMMIT_MESSAGE` | Previous commit message (useful for amend) |
-| `$GIT_LOG` | Recent commit log |
-| `$FILE_LIST` | List of changed files |
+| `$GIT_LOG`            | Recent commit log                          |
+| `$FILE_LIST`          | List of changed files                      |
 
 ### Configuration format
+
 Plain text prompt pasted into the AI commit message prompt field.
 
 ---
@@ -37,26 +40,30 @@ Plain text prompt pasted into the AI commit message prompt field.
 ## VS Code {#vscode}
 
 ### Where to configure
+
 - GitHub Copilot: `settings.json` → `github.copilot.chat.commitMessageGeneration.instructions`
 - Other AI extensions: Check extension-specific settings
 
 ### Available variables
-| Variable | Description |
-|----------|-------------|
-| `${gitDiff}` | Staged diff content |
-| `${gitBranch}` | Current branch name |
-| `${gitLog}` | Recent commit history |
-| `${fileList}` | Changed file list |
+
+| Variable       | Description           |
+| -------------- | --------------------- |
+| `${gitDiff}`   | Staged diff content   |
+| `${gitBranch}` | Current branch name   |
+| `${gitLog}`    | Recent commit history |
+| `${fileList}`  | Changed file list     |
 
 ### Configuration format
+
 JSON array in `settings.json`:
+
 ```json
 {
-  "github.copilot.chat.commitMessageGeneration.instructions": [
-    {
-      "text": "Your prompt here"
-    }
-  ]
+	"github.copilot.chat.commitMessageGeneration.instructions": [
+		{
+			"text": "Your prompt here"
+		}
+	]
 }
 ```
 
@@ -65,11 +72,13 @@ JSON array in `settings.json`:
 ## Xcode {#xcode}
 
 ### Where to configure
+
 - Source Control preferences → Git → Commit template
 - Or use a `.gitmessage` template file
 - Or integrate via git hooks (`prepare-commit-msg`)
 
 ### Available variables
+
 Xcode does not have built-in AI commit template variables. Use shell commands:
 | Command | Description |
 |---------|-------------|
@@ -78,6 +87,7 @@ Xcode does not have built-in AI commit template variables. Use shell commands:
 | `$(git log --oneline -10)` | Recent commits |
 
 ### Notes
+
 For AI-powered commit messages in Xcode, recommend setting up a `prepare-commit-msg` git hook or using a companion CLI tool.
 
 ---
@@ -85,14 +95,18 @@ For AI-powered commit messages in Xcode, recommend setting up a `prepare-commit-
 ## GitHub Desktop {#github-desktop}
 
 ### Where to configure
+
 - Uses `.gitmessage` file in the repository root
 - No built-in AI commit message feature
 
 ### Available variables
+
 None — GitHub Desktop doesn't support template variables.
 
 ### Recommendation
+
 Set up a `.gitmessage` file with a structural template:
+
 ```
 # <verb> <description> (#<issue>)
 #
@@ -110,10 +124,12 @@ Set up a `.gitmessage` file with a structural template:
 ## Sublime Merge {#sublime-merge}
 
 ### Where to configure
+
 - Preferences → Commit Message Template
 - Or `.gitmessage` file
 
 ### Available variables
+
 None built-in. Can use custom commands or git hooks.
 
 ---
@@ -121,13 +137,16 @@ None built-in. Can use custom commands or git hooks.
 ## Neovim / Vim {#neovim}
 
 ### Where to configure
+
 - AI plugins (e.g., Copilot.vim, codecompanion.nvim, etc.) — check plugin-specific config
 - Git commit template: `git config commit.template`
 
 ### Common plugin variables
+
 Varies by plugin. Most pass the staged diff as context automatically.
 
 ### Recommendation
+
 Configure via `prepare-commit-msg` hook or plugin-specific prompt settings.
 
 ---
@@ -135,11 +154,13 @@ Configure via `prepare-commit-msg` hook or plugin-specific prompt settings.
 ## Emacs (Magit) {#emacs}
 
 ### Where to configure
+
 - Magit commit template settings
 - `git-commit-setup-hook` for custom logic
 - AI via gptel, ellama, or similar packages
 
 ### Available variables
+
 Depends on the AI package. Most pass buffer content (diff) as context.
 
 ---

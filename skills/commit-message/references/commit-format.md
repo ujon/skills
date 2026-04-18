@@ -26,15 +26,15 @@ This is the canonical commit message format. Use this as the source of truth whe
 
 ## Title Verb Patterns
 
-| Verb       | When to Use                 |
-|------------|-----------------------------|
-| Add        | New feature or logic        |
-| Improve    | Refactoring or optimization |
-| Fix        | Bug fix                     |
-| Change     | Behavior modification       |
-| Remove     | Removing unused code        |
-| Handle     | Exception/error handling    |
-| Update     | Dependency or config update |
+| Verb    | When to Use                 |
+| ------- | --------------------------- |
+| Add     | New feature or logic        |
+| Improve | Refactoring or optimization |
+| Fix     | Bug fix                     |
+| Change  | Behavior modification       |
+| Remove  | Removing unused code        |
+| Handle  | Exception/error handling    |
+| Update  | Dependency or config update |
 
 ## Summary Rules
 
@@ -61,13 +61,13 @@ Before writing the Changes section, look at the file paths in the diff to unders
 
 ### Grouping styles
 
-| Grouping Style | When to Use | Example Headers |
-|----------------|-------------|-----------------|
-| By layer | Layered or hexagonal architecture | `API`, `Domain`, `Infrastructure` |
-| By module | Multi-module monorepo or package-based projects | `auth`, `payment`, `common` |
-| By directory | Convention-based projects with meaningful directory names | `controllers/`, `models/`, `views/` |
-| By concern | Cross-cutting changes or small projects | `Config`, `Build`, `Test`, `Docs` |
-| Flat (no group) | Early-stage projects, few files, or single-concern changes | _(omit group headers entirely)_ |
+| Grouping Style  | When to Use                                                | Example Headers                     |
+| --------------- | ---------------------------------------------------------- | ----------------------------------- |
+| By layer        | Layered or hexagonal architecture                          | `API`, `Domain`, `Infrastructure`   |
+| By module       | Multi-module monorepo or package-based projects            | `auth`, `payment`, `common`         |
+| By directory    | Convention-based projects with meaningful directory names  | `controllers/`, `models/`, `views/` |
+| By concern      | Cross-cutting changes or small projects                    | `Config`, `Build`, `Test`, `Docs`   |
+| Flat (no group) | Early-stage projects, few files, or single-concern changes | _(omit group headers entirely)_     |
 
 Pick one style per commit and stay consistent within that message. When in doubt, mirror the directory structure.
 
