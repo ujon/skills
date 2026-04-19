@@ -11,13 +11,15 @@ The preview is **one HTML file** — there is no separate `styleguide.css`. The 
 
 CSS uses **modern syntax** — native nesting (`&`), `:is()`, `color-mix()`, logical properties (`margin-inline`, `block-size`, `inset-block-end`). Supported in all current evergreen browsers.
 
-**How to use this file**: each `## components/<name>.css` section below is written verbatim to that path. The `## components/index.css` section is the aggregator. Styleguide preview blocks (`## Reset`, `## Base`, `## Preview chrome CSS`, `## HTML template`, `## Components HTML`) are only used when the preview is enabled.
+**How to use this file**: each `## components/<name>.css` section below is written verbatim to that path. The `## components/index.css` section is the aggregator and references `./typography.css`, which comes from the per-system reference (not this file) because its class vocabulary varies. Styleguide preview blocks (`## Reset`, `## Base`, `## Preview chrome CSS`, `## HTML template`, `## Components HTML`) are only used when the preview is enabled.
 
 ---
 
 ## components/index.css
 
 ```css
+@import './typography.css';
+@import './color.css';
 @import './button.css';
 @import './form.css';
 @import './badge.css';
@@ -28,6 +30,52 @@ CSS uses **modern syntax** — native nesting (`&`), `:is()`, `color-mix()`, log
 @import './tabs.css';
 @import './table.css';
 @import './link.css';
+@import './effects.css';
+```
+
+- `typography.css` is per-system (defined in each `references/<system>.md`, not here).
+- `effects.css` is optional — include its `@import` only when the system ships effect classes (`.glow` / `.sweep` / `.glow-sweep`). Omit the line for systems without it.
+- All others are system-agnostic and defined below (including `color.css`, which is invariant across every system because it wraps the semantic role tokens).
+
+---
+
+## components/color.css
+
+Utility classes that wrap every non-default semantic color token from `theme.css`. Apply `.bg-<role>` / `.text-<role>` / `.border-<role>` to any element. Dark-mode safe — the classes read `var(--*)`, so they follow the theme-toggle automatically. Default roles (`--bg`, `--fg`, `--border`) are applied to `<body>` via the reset; no class is needed for them.
+
+```css
+/* Backgrounds */
+.bg-subtle         { background: var(--bg-subtle); }
+.bg-muted          { background: var(--bg-muted); }
+.bg-elevated       { background: var(--bg-elevated); }
+.bg-accent         { background: var(--accent); }
+.bg-accent-muted   { background: var(--accent-muted); }
+.bg-highlight      { background: var(--highlight); }
+.bg-highlight-muted{ background: var(--highlight-muted); }
+.bg-danger         { background: var(--danger); }
+.bg-success        { background: var(--success); }
+.bg-warning        { background: var(--warning); }
+
+/* Text (maps --fg-* → .text-*) */
+.text-muted        { color: var(--fg-muted); }
+.text-subtle       { color: var(--fg-subtle); }
+.text-accent       { color: var(--accent); }
+.text-accent-muted { color: var(--accent-muted); }
+.text-highlight    { color: var(--highlight); }
+.text-highlight-muted{ color: var(--highlight-muted); }
+.text-danger       { color: var(--danger); }
+.text-success      { color: var(--success); }
+.text-warning      { color: var(--warning); }
+
+/* Border (color only — consumer sets border-width + style) */
+.border-strong          { border-color: var(--border-strong); }
+.border-accent          { border-color: var(--accent); }
+.border-accent-muted    { border-color: var(--accent-muted); }
+.border-highlight       { border-color: var(--highlight); }
+.border-highlight-muted { border-color: var(--highlight-muted); }
+.border-danger          { border-color: var(--danger); }
+.border-success         { border-color: var(--success); }
+.border-warning         { border-color: var(--warning); }
 ```
 
 ---
@@ -667,7 +715,14 @@ Preview-only layout and display widgets. Uses `.sg-*` prefix. Bundle-only.
 	}
 }
 
-/* Typography rows */
+/* Typography rows — the sample span receives the typography utility class
+   (.text-xs, .display-large, etc.), which sets font-size + line-height + weight.
+   We keep chrome-side tweaks at zero specificity via :where so the class always
+   wins. Color falls back via inheritance from body's --fg. */
+:where(.sg-type-row .sg-type-sample) {
+	line-height: 1.2;
+}
+
 .sg-type-row {
 	display: grid;
 	grid-template-columns: 140px 1fr auto;
@@ -682,11 +737,6 @@ Preview-only layout and display widgets. Uses `.sg-*` prefix. Bundle-only.
 		color: var(--fg-subtle);
 		font-family: var(--font-mono);
 		font-size: var(--font-xs);
-	}
-
-	& .sg-type-sample {
-		color: var(--fg);
-		line-height: 1.1;
 	}
 
 	& .sg-type-meta {
@@ -710,12 +760,33 @@ Preview-only layout and display widgets. Uses `.sg-*` prefix. Bundle-only.
 	border-radius: var(--radius-md);
 	overflow: hidden;
 	background: var(--bg);
+}
 
-	& .sg-swatch-preview {
-		block-size: 64px;
-		border-block-end: 1px solid var(--border);
-	}
+/* :where() gives spec 0 so utility classes (.bg-*, .border-*) applied directly
+   to .sg-swatch-preview always win — including on the bottom edge where the
+   base would otherwise fight .border-strong through `border-block-end: var(--border)`. */
+:where(.sg-swatch-preview) {
+	block-size: 64px;
+	border-block-end: 1px solid var(--border);
+}
 
+.sg-swatch-text {
+	background: var(--bg);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: var(--font-lg);
+	font-weight: 500;
+}
+
+.sg-swatch-border {
+	background: var(--bg);
+	border-width: 4px;
+	border-style: solid;
+	border-block-end-width: 4px;
+}
+
+.sg-swatch {
 	& .sg-swatch-body {
 		padding: var(--space-sm) var(--space-md);
 		font-size: var(--font-xs);
@@ -724,12 +795,33 @@ Preview-only layout and display widgets. Uses `.sg-*` prefix. Bundle-only.
 	& .sg-swatch-name {
 		color: var(--fg);
 		font-weight: 500;
+		font-family: var(--font-mono);
 	}
 
 	& .sg-swatch-value {
 		color: var(--fg-muted);
 		font-family: var(--font-mono);
 		margin-block-start: 2px;
+	}
+
+	& .sg-swatch-classes {
+		color: var(--fg-subtle);
+		font-family: var(--font-mono);
+		margin-block-start: var(--space-xs);
+		font-size: 11px;
+		line-height: 1.3;
+	}
+}
+
+.sg-section-note {
+	color: var(--fg-muted);
+	font-size: var(--font-xs);
+	margin-block: var(--space-xs) var(--space-md);
+
+	& code {
+		background: var(--bg-muted);
+		padding: 0 var(--space-xs);
+		border-radius: var(--radius-sm);
 	}
 }
 
@@ -779,23 +871,50 @@ Preview-only layout and display widgets. Uses `.sg-*` prefix. Bundle-only.
 	color: var(--fg-muted);
 }
 
-/* Elevation */
-.sg-elevation-grid {
+/* Effects */
+.sg-effects-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
 	gap: var(--space-lg);
+	margin-block-start: var(--space-md);
 }
 
-.sg-elevation-box {
+.sg-effect {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-xs);
+}
+
+.sg-effect-preview {
 	aspect-ratio: 3 / 2;
 	background: var(--bg);
+	border-radius: var(--radius-md);
+	border: 1px solid var(--border);
+}
+
+.sg-effect-preview.glow-preview {
+	background: var(--bg-subtle);
+	border: none;
+}
+
+.sg-effect-label,
+.sg-effect-value {
+	font-family: var(--font-mono);
+	font-size: var(--font-xs);
+}
+.sg-effect-label { color: var(--fg); }
+.sg-effect-value { color: var(--fg-muted); }
+
+.sg-effect-tile {
+	aspect-ratio: 3 / 2;
+	background: var(--bg-subtle);
 	border-radius: var(--radius-md);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-family: var(--font-mono);
 	font-size: var(--font-xs);
-	color: var(--fg-muted);
+	color: var(--fg);
 }
 
 /* Layout helpers */
@@ -812,6 +931,80 @@ Preview-only layout and display widgets. Uses `.sg-*` prefix. Bundle-only.
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 	gap: var(--space-md);
+}
+
+/* Value rows — used for button sizes, motion, extras tables */
+.sg-value-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: var(--space-xs) var(--space-md);
+	margin-block-start: var(--space-md);
+}
+
+.sg-value-row {
+	display: flex;
+	justify-content: space-between;
+	gap: var(--space-sm);
+	padding-block: var(--space-xs);
+	border-block-end: 1px solid var(--border);
+	font-family: var(--font-mono);
+	font-size: var(--font-xs);
+
+	& .sg-value-label { color: var(--fg-muted); }
+	& .sg-value-value { color: var(--fg); }
+}
+
+.sg-motion-row {
+	display: flex;
+	align-items: center;
+	gap: var(--space-md);
+	padding-block: var(--space-sm);
+	font-family: var(--font-mono);
+	font-size: var(--font-xs);
+
+	& .sg-motion-label { color: var(--fg-muted); min-inline-size: 120px; }
+	& .sg-motion-value { color: var(--fg); }
+}
+
+.sg-motion-demo {
+	inline-size: 80px;
+	block-size: 32px;
+	border-radius: var(--radius-md);
+	background: var(--bg-muted);
+	border: 1px solid var(--border);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--fg);
+	cursor: pointer;
+	transition:
+		background var(--transition),
+		transform var(--transition);
+
+	&:hover {
+		background: var(--accent);
+		color: var(--bg);
+		transform: translateX(8px);
+	}
+}
+
+.sg-extras-table {
+	inline-size: 100%;
+	border-collapse: collapse;
+	font-family: var(--font-mono);
+	font-size: var(--font-xs);
+
+	& th, & td {
+		text-align: start;
+		padding: var(--space-xs) var(--space-sm);
+		border-block-end: 1px solid var(--border);
+	}
+	& th {
+		color: var(--fg-muted);
+		font-weight: 500;
+	}
+	& td:first-child { color: var(--fg-muted); }
+	& td:last-child  { color: var(--fg); }
 }
 
 /* Theme toggle */
@@ -860,15 +1053,22 @@ Substitute `{{...}}` placeholders per `SKILL.md` step 4. All placeholders are re
 
 		<section class="sg-section">
 			<h2>Typography</h2>
+			<h3>Font families</h3>
+			{{FONT_FAMILY_ROWS}}
+			<h3>Scale</h3>
 			{{TYPOGRAPHY_ROWS}}
 		</section>
 
 		<section class="sg-section">
-			<h2>Palette</h2>
-			<h3>Semantic roles</h3>
-			<div class="sg-swatch-grid">{{SEMANTIC_SWATCHES}}</div>
-			<h3>Primitive palette</h3>
+			<h2>Color</h2>
+
+			<h3>Palette</h3>
+			<p class="sg-section-note">Raw color tokens from <code>primitives/palette.css</code>. Internal to the bundle — consumers don't apply these directly.</p>
 			<div class="sg-swatch-grid">{{PRIMITIVE_SWATCHES}}</div>
+
+			<h3>Roles</h3>
+			<p class="sg-section-note">Semantic tokens from <code>theme.css</code>. Each swatch lists the class names you apply in markup (from <code>components/color.css</code>). Default roles (<code>--bg</code>, <code>--fg</code>, <code>--border</code>) apply automatically without a class.</p>
+			<div class="sg-swatch-grid">{{SEMANTIC_SWATCHES}}</div>
 		</section>
 
 		<section class="sg-section">
@@ -881,7 +1081,22 @@ Substitute `{{...}}` placeholders per `SKILL.md` step 4. All placeholders are re
 			<div class="sg-radius-grid">{{RADIUS_BOXES}}</div>
 		</section>
 
-		{{ELEVATION_SECTION}}
+		<section class="sg-section">
+			<h2>Sizes &amp; motion</h2>
+			<h3>Button heights</h3>
+			<div class="sg-cluster">
+				<button class="btn sm">.btn .sm</button>
+				<button class="btn">.btn</button>
+				<button class="btn lg">.btn .lg</button>
+			</div>
+			<div class="sg-value-grid">{{BUTTON_SIZE_ROWS}}</div>
+			<h3>Motion</h3>
+			{{MOTION_ROW}}
+		</section>
+
+		{{MOTION_SECTION}}
+
+		{{EFFECTS_SECTION}}
 
 		<section class="sg-section">
 			<h2>Components</h2>
@@ -916,43 +1131,171 @@ Substitute `{{...}}` placeholders per `SKILL.md` step 4. All placeholders are re
 
 ## Placeholder patterns
 
-### `{{TYPOGRAPHY_ROWS}}` — mutually exclusive
+The goal of these placeholders is **complete visibility**: every `--*` declared in `primitives/*` + `theme.css` must surface somewhere in the preview. The specialized sections cover Typography (font families + scale/roles), Color (Palette + Roles), Spacing, Radius, Sizes & motion, Motion, Effects, and Components. If a new token category emerges that doesn't fit any of them, introduce a new named section rather than reaching for a catch-all.
 
-Emit exactly one of the two variants below, never both. Pick based on whether the system defines type roles in its reference file:
-
-**Variant A — systems WITHOUT type roles** (Minimal, Polaris, Radix): emit six rows, one per `--font-xs` … `--font-2xl`.
+### `{{FONT_FAMILY_ROWS}}` — two rows, always
 
 ```html
 <div class="sg-type-row">
-	<span class="sg-type-label">font-{KEY}</span>
-	<span class="sg-type-sample" style="font-size: var(--font-{KEY});">The quick brown fox jumps</span>
+	<span class="sg-type-label">font-sans</span>
+	<span class="sg-type-sample" style="font-family: var(--font-sans); font-size: var(--font-md);">The quick brown fox jumps over the lazy dog</span>
+	<span class="sg-type-meta" data-var="--font-sans">—</span>
+</div>
+<div class="sg-type-row">
+	<span class="sg-type-label">font-mono</span>
+	<span class="sg-type-sample" style="font-family: var(--font-mono); font-size: var(--font-md);">const greet = () =&gt; "Hello, world";</span>
+	<span class="sg-type-meta" data-var="--font-mono">—</span>
+</div>
+```
+
+### `{{TYPOGRAPHY_ROWS}}` — mutually exclusive
+
+Emit exactly one of the two variants below, never both. The system's `## Preview metadata → type_roles` field decides. **Both variants apply the class being demonstrated — no inline font styling.** The class name is the label so the preview self-documents what the user types in HTML.
+
+**Variant A — `type_roles: none`** (Minimal): emit six rows, one per `--font-xs` … `--font-2xl`.
+
+```html
+<div class="sg-type-row">
+	<span class="sg-type-label">.text-{KEY}</span>
+	<span class="sg-type-sample text-{KEY}">The quick brown fox jumps</span>
 	<span class="sg-type-meta" data-var="--font-{KEY}">—</span>
 </div>
 ```
 
-**Variant B — systems WITH type roles** (Material, Uber Base, Carbon, Maximal): emit one row per role. No `--font-*` scale rows, no extra `<h3>` heading.
+**Variant B — `type_roles: emit: …`** (Material, Carbon, Fluent, Maximal): emit one row per role. No `--font-*` scale rows, no extra `<h3>` heading.
 
 ```html
 <div class="sg-type-row">
-	<span class="sg-type-label">{ROLE_NAME}</span>
-	<span class="sg-type-sample" style="font-size: {SIZE}; line-height: {LINE}; font-weight: {WEIGHT};">Design tokens styleguide</span>
+	<span class="sg-type-label">.{ROLE_NAME}</span>
+	<span class="sg-type-sample {ROLE_NAME}">Design tokens styleguide</span>
 	<span class="sg-type-meta">{SIZE} / {LINE} · {WEIGHT}</span>
 </div>
 ```
 
-### `{{SEMANTIC_SWATCHES}}`, `{{PRIMITIVE_SWATCHES}}`
+### `{{PRIMITIVE_SWATCHES}}` — exhaustive
+
+One swatch per **every** `--*` variable declared in `primitives/palette.css`, in source order. Include every step of every ramp (e.g., all 13 gray steps for Minimal, all 16 for Carbon, all tonal steps for Material). Do not collapse, skip, or summarize. If a token is declared in the file, it must appear here.
 
 ```html
 <div class="sg-swatch">
 	<div class="sg-swatch-preview" style="background: var(--{NAME});"></div>
 	<div class="sg-swatch-body">
-		<div class="sg-swatch-name">{NAME}</div>
+		<div class="sg-swatch-name">--{NAME}</div>
 		<div class="sg-swatch-value" data-var="--{NAME}">—</div>
 	</div>
 </div>
 ```
 
-### `{{SPACING_ROWS}}` — five rows
+### `{{SEMANTIC_SWATCHES}}` — exhaustive, class-driven per category
+
+One swatch per key declared in the light `:root` block of `theme.css`. **Each swatch visually applies the class that wraps that role** (so the preview self-demonstrates the utility layer). Category determines the render mode:
+
+| Category | Roles | Render mode |
+|---|---|---|
+| **surface** | `--bg`, `--bg-subtle`, `--bg-muted`, `--bg-elevated` | Filled tile. Variants apply `.bg-<suffix>`; `--bg` uses inline `style="background: var(--bg);"` (no class for defaults). |
+| **text** | `--fg`, `--fg-muted`, `--fg-subtle` | "Aa — sample" text on default bg. Variants apply `.text-muted` / `.text-subtle`; `--fg` uses inline `style="color: var(--fg);"`. Note the `fg-` → `text-` naming flip. |
+| **border** | `--border`, `--border-strong` | Bordered box (4px) on default bg. `.border-strong` wraps the variant; `--border` uses inline `style="border-color: var(--border);"`. |
+| **accent / status** | `--accent`, `--accent-muted`, `--highlight`, `--highlight-muted`, `--danger`, `--success`, `--warning` | Filled tile using `.bg-<name>`. Most visible use — bg is the primary rendering. The class label lists all three applicable utilities (`.bg-<name> · .text-<name> · .border-<name>`). |
+| **extras** | System-specific (`--overlay-dim`, `--icon-color-*`, …) | Filled tile with inline `style="background: var(--<name>);"`. No class (these roles have no utility wrapper). |
+
+Swatch markup per category:
+
+**Surface (`--bg-*`):**
+```html
+<!-- Default (--bg) -->
+<div class="sg-swatch">
+	<div class="sg-swatch-preview" style="background: var(--bg);"></div>
+	<div class="sg-swatch-body">
+		<div class="sg-swatch-name">--bg</div>
+		<div class="sg-swatch-value" data-var="--bg">—</div>
+		<div class="sg-swatch-classes">(default)</div>
+	</div>
+</div>
+
+<!-- Variant (--bg-subtle / -muted / -elevated) -->
+<div class="sg-swatch">
+	<div class="sg-swatch-preview bg-{SUFFIX}"></div>
+	<div class="sg-swatch-body">
+		<div class="sg-swatch-name">--bg-{SUFFIX}</div>
+		<div class="sg-swatch-value" data-var="--bg-{SUFFIX}">—</div>
+		<div class="sg-swatch-classes">.bg-{SUFFIX}</div>
+	</div>
+</div>
+```
+
+**Text (`--fg-*`):**
+```html
+<!-- Default (--fg) -->
+<div class="sg-swatch">
+	<div class="sg-swatch-preview sg-swatch-text"><span style="color: var(--fg);">Aa — sample</span></div>
+	<div class="sg-swatch-body">
+		<div class="sg-swatch-name">--fg</div>
+		<div class="sg-swatch-value" data-var="--fg">—</div>
+		<div class="sg-swatch-classes">(default)</div>
+	</div>
+</div>
+
+<!-- Variant (--fg-muted / -subtle) -->
+<div class="sg-swatch">
+	<div class="sg-swatch-preview sg-swatch-text"><span class="text-{SUFFIX}">Aa — sample</span></div>
+	<div class="sg-swatch-body">
+		<div class="sg-swatch-name">--fg-{SUFFIX}</div>
+		<div class="sg-swatch-value" data-var="--fg-{SUFFIX}">—</div>
+		<div class="sg-swatch-classes">.text-{SUFFIX}</div>
+	</div>
+</div>
+```
+
+**Border (`--border-*`):**
+```html
+<!-- Default (--border) -->
+<div class="sg-swatch">
+	<div class="sg-swatch-preview sg-swatch-border" style="border-color: var(--border);"></div>
+	<div class="sg-swatch-body">
+		<div class="sg-swatch-name">--border</div>
+		<div class="sg-swatch-value" data-var="--border">—</div>
+		<div class="sg-swatch-classes">(default)</div>
+	</div>
+</div>
+
+<!-- Variant (--border-strong) -->
+<div class="sg-swatch">
+	<div class="sg-swatch-preview sg-swatch-border border-strong"></div>
+	<div class="sg-swatch-body">
+		<div class="sg-swatch-name">--border-strong</div>
+		<div class="sg-swatch-value" data-var="--border-strong">—</div>
+		<div class="sg-swatch-classes">.border-strong</div>
+	</div>
+</div>
+```
+
+**Accent / status (all utility-mapped roles):**
+```html
+<div class="sg-swatch">
+	<div class="sg-swatch-preview bg-{NAME}"></div>
+	<div class="sg-swatch-body">
+		<div class="sg-swatch-name">--{NAME}</div>
+		<div class="sg-swatch-value" data-var="--{NAME}">—</div>
+		<div class="sg-swatch-classes">.bg-{NAME} · .text-{NAME} · .border-{NAME}</div>
+	</div>
+</div>
+```
+
+**Extras (no utility):**
+```html
+<div class="sg-swatch">
+	<div class="sg-swatch-preview" style="background: var(--{NAME});"></div>
+	<div class="sg-swatch-body">
+		<div class="sg-swatch-name">--{NAME}</div>
+		<div class="sg-swatch-value" data-var="--{NAME}">—</div>
+		<div class="sg-swatch-classes">(var only)</div>
+	</div>
+</div>
+```
+
+### `{{SPACING_ROWS}}` — exhaustive
+
+One row per every spacing token in `primitives/size.css`, in source order. That includes `--space-*` and any system-specific extensions the file declares (e.g., Maximal's 18-step `--space-scale-*`). Never look outside `size.css` for these — all dimension tokens live there.
 
 ```html
 <div class="sg-space-row">
@@ -962,28 +1305,98 @@ Emit exactly one of the two variants below, never both. Pick based on whether th
 </div>
 ```
 
-### `{{RADIUS_BOXES}}` — three boxes
+### `{{RADIUS_BOXES}}` — exhaustive
+
+One box per every corner-radius / shape token declared in `primitives/size.css` (`--radius-*`, plus any `--md-shape-*` or similar the system adds). Source order.
 
 ```html
 <div class="sg-radius-box" style="border-radius: {VALUE};">radius-{KEY} · {VALUE}</div>
 ```
 
-### `{{ELEVATION_SECTION}}` — optional
+### `{{BUTTON_SIZE_ROWS}}` — three rows
 
-Empty string if no elevation. Otherwise:
+One row each for `--btn-sm`, `--btn-md`, `--btn-lg`.
+
+```html
+<div class="sg-value-row">
+	<span class="sg-value-label">--btn-{KEY}</span>
+	<span class="sg-value-value" data-var="--btn-{KEY}">—</span>
+</div>
+```
+
+### `{{MOTION_ROW}}` — transition + demo
+
+```html
+<div class="sg-motion-row">
+	<span class="sg-motion-label">--transition</span>
+	<span class="sg-motion-demo">hover</span>
+	<span class="sg-motion-value" data-var="--transition">—</span>
+</div>
+```
+
+Systems that add motion extras (e.g., Material's `--md-motion-easing-*`, `--md-motion-duration-*`) must also surface them in `{{EXTRAS_SECTION}}`.
+
+### `{{MOTION_SECTION}}` — optional
+
+Empty string if the system has no `primitives/motion.css`. Otherwise:
 
 ```html
 <section class="sg-section">
-	<h2>Elevation</h2>
-	<div class="sg-elevation-grid">{ELEVATION_BOXES}</div>
+	<h2>Motion</h2>
+	<table class="sg-extras-table">
+		<thead><tr><th>Token</th><th>Value</th><th>Demo</th></tr></thead>
+		<tbody>
+			<tr>
+				<td>--{NAME}</td>
+				<td data-var="--{NAME}">—</td>
+				<td><span class="sg-motion-demo" style="transition-timing-function: var(--{NAME}); transition-duration: 800ms;">hover</span></td>
+			</tr>
+			<!-- repeat per token in primitives/motion.css; the demo cell only makes sense for easing/duration values -->
+		</tbody>
+	</table>
 </section>
 ```
 
-Each box:
+### `{{EFFECTS_SECTION}}` — optional, visual
+
+Empty string if the system has no `primitives/effects.css`. Otherwise emit a section with one labeled tile per effect token, rendered live:
 
 ```html
-<div class="sg-elevation-box" style="box-shadow: {VALUE};">--{NAME}</div>
+<section class="sg-section">
+	<h2>Effects</h2>
+	<div class="sg-effects-grid">
+		<!-- shadow/elevation token: tile shows the shadow -->
+		<div class="sg-effect">
+			<div class="sg-effect-preview" style="box-shadow: var(--{NAME});"></div>
+			<div class="sg-effect-label">--{NAME}</div>
+			<div class="sg-effect-value" data-var="--{NAME}">—</div>
+		</div>
+		<!-- glow token: tile shows the glow on a neutral surface -->
+		<div class="sg-effect">
+			<div class="sg-effect-preview glow-preview" style="box-shadow: var(--{NAME});"></div>
+			<div class="sg-effect-label">--{NAME}</div>
+			<div class="sg-effect-value" data-var="--{NAME}">—</div>
+		</div>
+		<!-- gradient / sweep token: tile uses background to render the gradient -->
+		<div class="sg-effect">
+			<div class="sg-effect-preview" style="background: var(--{NAME});"></div>
+			<div class="sg-effect-label">--{NAME}</div>
+			<div class="sg-effect-value" data-var="--{NAME}">—</div>
+		</div>
+	</div>
+	<!-- if the system also ships components/effects.css with .glow/.sweep/.glow-sweep classes,
+	     add a sub-grid of live class demos beneath the token tiles: -->
+	<h3>Effect classes</h3>
+	<div class="sg-effects-grid">
+		<div class="sg-effect-tile glow">.glow</div>
+		<div class="sg-effect-tile glow strong">.glow.strong</div>
+		<div class="sg-effect-tile sweep">.sweep</div>
+		<div class="sg-effect-tile glow-sweep">.glow-sweep</div>
+	</div>
+</section>
 ```
+
+The goal is **visible, interpretable preview** — a shadow token must actually cast that shadow; a glow token must glow; a sweep gradient must render. Fall back to a plain key/value row only when the token doesn't have an obvious single-property CSS interpretation.
 
 ---
 
@@ -1120,4 +1533,5 @@ Verbatim block for `{{COMPONENTS_BLOCK}}`. Uses the component selectors from `co
   radius: 'var(--radius-md)',
 };
 </code></pre>
+
 ```

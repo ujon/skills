@@ -78,6 +78,44 @@ IBM's enterprise design system. IBM Plex Sans, sharp radii, 16-step neutral gray
 	--font-lg: 20px;  /* heading-03 */
 	--font-xl: 28px;  /* heading-04 */
 	--font-2xl: 32px; /* heading-05 */
+
+	/* Carbon productive type roles */
+	--typography-caption-01-size: 12px;
+	--typography-caption-01-line: 16px;
+	--typography-caption-01-weight: 400;
+	--typography-label-01-size: 12px;
+	--typography-label-01-line: 16px;
+	--typography-label-01-weight: 400;
+	--typography-helper-text-01-size: 12px;
+	--typography-helper-text-01-line: 16px;
+	--typography-helper-text-01-weight: 400;
+	--typography-body-01-size: 14px;
+	--typography-body-01-line: 20px;
+	--typography-body-01-weight: 400;
+	--typography-body-02-size: 16px;
+	--typography-body-02-line: 24px;
+	--typography-body-02-weight: 400;
+	--typography-heading-01-size: 14px;
+	--typography-heading-01-line: 18px;
+	--typography-heading-01-weight: 600;
+	--typography-heading-02-size: 16px;
+	--typography-heading-02-line: 22px;
+	--typography-heading-02-weight: 600;
+	--typography-heading-03-size: 20px;
+	--typography-heading-03-line: 28px;
+	--typography-heading-03-weight: 400;
+	--typography-heading-04-size: 28px;
+	--typography-heading-04-line: 36px;
+	--typography-heading-04-weight: 400;
+	--typography-heading-05-size: 32px;
+	--typography-heading-05-line: 40px;
+	--typography-heading-05-weight: 400;
+	--typography-heading-06-size: 42px;
+	--typography-heading-06-line: 50px;
+	--typography-heading-06-weight: 300;
+	--typography-heading-07-size: 54px;
+	--typography-heading-07-line: 64px;
+	--typography-heading-07-weight: 300;
 }
 ```
 
@@ -165,48 +203,25 @@ IBM's enterprise design system. IBM Plex Sans, sharp radii, 16-step neutral gray
 }
 ```
 
-## extras.css
+## primitives/motion.css · primitives/effects.css
+
+Neither. Carbon's type roles live in `primitives/typography.css`; no additional motion or effects tokens. Skip both files and omit their imports from `primitives/index.css`.
+
+## components/typography.css
 
 ```css
-:root {
-	/* Carbon productive type roles */
-	--typography-caption-01-size: 12px;
-	--typography-caption-01-line: 16px;
-	--typography-caption-01-weight: 400;
-	--typography-label-01-size: 12px;
-	--typography-label-01-line: 16px;
-	--typography-label-01-weight: 400;
-	--typography-helper-text-01-size: 12px;
-	--typography-helper-text-01-line: 16px;
-	--typography-helper-text-01-weight: 400;
-	--typography-body-01-size: 14px;
-	--typography-body-01-line: 20px;
-	--typography-body-01-weight: 400;
-	--typography-body-02-size: 16px;
-	--typography-body-02-line: 24px;
-	--typography-body-02-weight: 400;
-	--typography-heading-01-size: 14px;
-	--typography-heading-01-line: 18px;
-	--typography-heading-01-weight: 600;
-	--typography-heading-02-size: 16px;
-	--typography-heading-02-line: 22px;
-	--typography-heading-02-weight: 600;
-	--typography-heading-03-size: 20px;
-	--typography-heading-03-line: 28px;
-	--typography-heading-03-weight: 400;
-	--typography-heading-04-size: 28px;
-	--typography-heading-04-line: 36px;
-	--typography-heading-04-weight: 400;
-	--typography-heading-05-size: 32px;
-	--typography-heading-05-line: 40px;
-	--typography-heading-05-weight: 400;
-	--typography-heading-06-size: 42px;
-	--typography-heading-06-line: 50px;
-	--typography-heading-06-weight: 300;
-	--typography-heading-07-size: 54px;
-	--typography-heading-07-line: 64px;
-	--typography-heading-07-weight: 300;
-}
+.caption-01     { font-size: var(--typography-caption-01-size);     line-height: var(--typography-caption-01-line);     font-weight: var(--typography-caption-01-weight); }
+.label-01       { font-size: var(--typography-label-01-size);       line-height: var(--typography-label-01-line);       font-weight: var(--typography-label-01-weight); }
+.helper-text-01 { font-size: var(--typography-helper-text-01-size); line-height: var(--typography-helper-text-01-line); font-weight: var(--typography-helper-text-01-weight); }
+.body-01        { font-size: var(--typography-body-01-size);        line-height: var(--typography-body-01-line);        font-weight: var(--typography-body-01-weight); }
+.body-02        { font-size: var(--typography-body-02-size);        line-height: var(--typography-body-02-line);        font-weight: var(--typography-body-02-weight); }
+.heading-01     { font-size: var(--typography-heading-01-size);     line-height: var(--typography-heading-01-line);     font-weight: var(--typography-heading-01-weight); }
+.heading-02     { font-size: var(--typography-heading-02-size);     line-height: var(--typography-heading-02-line);     font-weight: var(--typography-heading-02-weight); }
+.heading-03     { font-size: var(--typography-heading-03-size);     line-height: var(--typography-heading-03-line);     font-weight: var(--typography-heading-03-weight); }
+.heading-04     { font-size: var(--typography-heading-04-size);     line-height: var(--typography-heading-04-line);     font-weight: var(--typography-heading-04-weight); }
+.heading-05     { font-size: var(--typography-heading-05-size);     line-height: var(--typography-heading-05-line);     font-weight: var(--typography-heading-05-weight); }
+.heading-06     { font-size: var(--typography-heading-06-size);     line-height: var(--typography-heading-06-line);     font-weight: var(--typography-heading-06-weight); }
+.heading-07     { font-size: var(--typography-heading-07-size);     line-height: var(--typography-heading-07-line);     font-weight: var(--typography-heading-07-weight); }
 ```
 
 ## Preview metadata

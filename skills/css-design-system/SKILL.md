@@ -5,35 +5,46 @@ description: >-
   typography scale, spacing, radius, light/dark theme, per-component CSS,
   and (by default) an HTML preview page. Ships seven design systems as
   ready-to-copy CSS blocks in references (Minimal, Material Design 3,
-  Uber Base, IBM Carbon, Shopify Polaris, Radix Themes, Maximal); Claude
-  assembles them into files directly (no build script). Use this skill
-  whenever the user asks for CSS design tokens, CSS variables for a theme,
-  a styleguide, a typography scale, a color palette, spacing/radius tokens,
-  a preview of how a named design system looks, component CSS (`.btn`,
-  `.input`, `.card`, etc.), or wants to apply / compare Minimal / Maximal /
-  Material / Uber / Carbon / Polaris / Radix / Fluent / etc. Also use for
-  "refresh the CSS tokens", "rebuild theme.css", "set up CSS variables",
-  "show all sizes/colors on one page" — even if "styleguide" is never said.
-  Project-agnostic; works for React, Vue, Svelte, Angular, or plain HTML/CSS.
+  IBM Carbon, Fluent 2, Maximal). **Before writing any file, Claude must
+  first ask the user which of the five systems to use and wait for the
+  answer** — the only exception is when the user has already named a
+  system in the triggering message. No silent defaults. Once the system
+  is chosen, Claude assembles the files directly (no build script). Use
+  this skill whenever the user asks for CSS design tokens, CSS variables
+  for a theme, a styleguide, a typography scale, a color palette,
+  spacing/radius tokens, a preview of how a named design system looks,
+  component CSS (`.btn`, `.input`, `.card`, etc.), or wants to apply /
+  compare Minimal / Maximal / Material / Carbon / Fluent / etc. Also use
+  for "refresh the CSS tokens",
+  "rebuild theme.css", "set up CSS variables", "show all sizes/colors on
+  one page" — even if "styleguide" is never said. Project-agnostic; works
+  for React, Vue, Svelte, Angular, or plain HTML/CSS.
 ---
 
 # CSS Styleguide
 
 Write a CSS design-token styleguide for any web project by assembling ready-to-copy blocks from `references/`. No build script — you write the files directly with the Write tool.
 
+## First action — blocking gate
+
+**Before reading the tree, reading references, or writing any file**, ask the user which of the seven design systems to use. See Workflow §1 for the exact list and wording. The skill is not allowed to proceed past this gate without either (a) an explicit system name in the user's message, or (b) the user's reply to this question. "Just do it" / silent defaulting to `minimal` is a bug, not a shortcut.
+
 ## What gets produced
 
 ```
 <output>/
 ├── index.css              single import entry point — pulls in everything below, in order
-├── primitives/
-│   ├── palette.css        raw color tokens
-│   ├── size.css           spacing, radius, button heights, transition
-│   ├── typography.css     font family + six-step type scale
-│   └── index.css          three-line import aggregator
-├── theme.css              semantic mapping (light + dark)
-├── extras.css             system-specific tokens (only if the system defines any)
-├── components/            basic reusable components — always written
+├── primitives/            variable layer only (no classes)
+│   ├── palette.css        every color token the system exposes
+│   ├── size.css           every dimension token (spacing, radius, button heights, transition, shape scales, icon size)
+│   ├── typography.css     every type token (families, semantic scale, type roles)
+│   ├── motion.css         OPTIONAL — easings, durations, animation timing (beyond --transition)
+│   ├── effects.css        OPTIONAL — shadows, elevation, glow, gradients used as visual effects
+│   └── index.css          aggregator — imports the files above
+├── theme.css              variable layer — semantic mapping (light + dark), incl. overlay/icon semantic colors
+├── components/            class layer — plain class names, always written
+│   ├── typography.css     .text-* OR role classes (per-system, mutually exclusive)
+│   ├── color.css          .bg-* / .text-* / .border-* wrappers for every semantic role (system-agnostic)
 │   ├── button.css
 │   ├── form.css           field + label + help + input + textarea + select + choice + switch
 │   ├── badge.css
@@ -44,22 +55,36 @@ Write a CSS design-token styleguide for any web project by assembling ready-to-c
 │   ├── tabs.css
 │   ├── table.css
 │   ├── link.css
+│   ├── effects.css        OPTIONAL — .glow / .sweep / .glow-sweep + @keyframes, for systems that ship visual-effect classes
 │   └── index.css          aggregator
 └── styleguide.html        self-contained preview — CSS inlined via <style> (preview only)
 ```
+
+Architectural rules:
+
+- **Variables are internal to this bundle; consumers interact via classes only.** All CSS custom properties live under `primitives/` and `theme.css`. Everything a consumer applies is a class from `components/`.
+- **One concern per file.** Each `primitives/*.css` owns a single semantic category: colors / dimensions / type / motion / visual effects. There is no `extras.css` catch-all — if a token doesn't fit an existing file, it gets its own concern-named file.
+- **Size.css holds every dimension token the system exposes** — the semantic invariants *and* any system-specific extensions (e.g., Maximal's `--space-scale-*`, Material's `--md-shape-*`, `--icon-size`, `--icon-stroke`).
+- **Typography.css holds every type token** — semantic `--font-*` *plus* every `--typography-<role>-*`.
+- **Motion.css is for motion tokens beyond `--transition`** — MD3 durations / easings, sweep timing, etc. Omit the file if the system has no additional motion tokens.
+- **Effects.css is for visual-effect *values*** — elevation, box-shadow compositions, glow, sweep gradients. Omit if the system has none.
+- **Theme.css absorbs semantic overlay/icon colors** — `--overlay-dim`, `--icon-color-*`, etc. These are semantic role mappings, not raw primitives.
+- **Components/effects.css holds effect *classes*** (`.glow`, `.sweep`, `.glow-sweep`) and their `@keyframes` — colocated with the classes that use them. Only written for systems that ship such effect classes.
 
 Consumers only need to import the top-level `index.css`; every other file is pulled in by its `@import` chain.
 
 ### Semantic tokens
 
-Semantic token names are identical across all systems (`--bg`, `--fg`, `--space-md`, `--font-lg`, `--radius-md`, etc.). Only the values differ. System-specific tokens live in `extras.css` and never collide with the semantic layer.
+Semantic token names are identical across all systems (`--bg`, `--fg`, `--space-md`, `--font-lg`, `--radius-md`, etc.). Only the values differ. System-specific tokens go in the appropriate concern-named primitive file (motion.css, effects.css, etc.) and never collide with the semantic layer.
 
 ### Basic components
 
-The `components/` directory ships ten per-component stylesheets with plain class names that read only semantic tokens. Pick just the ones you need via `@import` — or import `components/index.css` for everything.
+The `components/` directory ships twelve per-component stylesheets with plain class names that read only variables from the primitives + theme layer, plus an optional thirteenth (`effects.css`) for systems that define visual-effect classes. Pick just the ones you need via `@import` — or import `components/index.css` for everything.
 
 | File | Classes | Purpose |
 |---|---|---|
+| `typography.css` | `.text-xs` … `.text-2xl` (Minimal) **or** role classes such as `.display-large` / `.headline-medium` / `.body1` (Material, Carbon, Fluent, Maximal) | Per-system typography utilities (mutually exclusive — a system ships one vocabulary or the other, never both) |
+| `color.css` | `.bg-*`, `.text-*`, `.border-*` wrapping every non-default semantic role (subtle / muted / elevated / accent / accent-muted / highlight / highlight-muted / danger / success / warning). Default roles (`--bg` / `--fg` / `--border`) apply automatically without a class. | System-agnostic color utilities — lets consumers tint any element using semantic role tokens without reading `var(--*)` directly |
 | `button.css` | `.btn` + `.primary` / `.secondary` / `.ghost` / `.danger` / `.disabled` / `.sm` / `.lg` | Call-to-action buttons |
 | `form.css` | `.field` / `.label` / `.input` / `.textarea` / `.select` / `.help` / `.choice` / `.switch` | Inputs + choice + toggle, with focus, error, disabled states |
 | `badge.css` | `.badge` + solid / soft / outline / danger / success / warning | Labels + status chips |
@@ -70,6 +95,7 @@ The `components/` directory ships ten per-component stylesheets with plain class
 | `tabs.css` | `.tabs` + `.tab` + `.active` | Tab bar |
 | `table.css` | `.table` | Data tables |
 | `link.css` | `.link` | Inline hyperlinks |
+| `effects.css` *(optional)* | `.glow` (+ `.strong` / `.highlight` / `.danger`), `.sweep`, `.glow-sweep` + `@keyframes effect-sweep` + `@media (prefers-reduced-motion)` | Visual effect classes — only present when the system ships them (e.g. expressive Maximal variants with `--glow-*` / `--sweep-*` in `primitives/effects.css`) |
 
 All classes swap correctly when the theme toggles and when the active design system is regenerated. If one of the plain names clashes with an existing class in the consumer's codebase, rename it with a single global search-and-replace before importing.
 
@@ -80,7 +106,7 @@ User phrases:
 - "make / generate a styleguide", "give me a style guide"
 - "CSS design tokens", "CSS variables for my theme", "set up theme tokens"
 - "typography scale", "color palette", "spacing scale", "radius tokens"
-- "apply Material / Uber / Carbon / Polaris / Radix to this project"
+- "apply Material / Carbon / Fluent / Maximal / Minimal to this project"
 - "compare design systems", "preview how X looks"
 - "refresh / regenerate / reset the tokens / the theme"
 - Any request that ends in writing CSS custom properties for a design system, even in scratch projects
@@ -89,11 +115,28 @@ Do not trigger for: editing one component's CSS, fixing a single style rule, or 
 
 ## Workflow
 
-### 1. Confirm the inputs
+### 1. Ask which design system to use — BLOCKING
 
-Ask the user (or infer from their message):
+**This step is a hard gate. Do not read references, do not call the Write tool, do not plan files until the system is chosen.** Ask the user with this exact shape (or equivalent) and then STOP and wait for their reply:
 
-- **Which system?** One of: `minimal`, `material`, `uber-base`, `carbon`, `polaris`, `radix`, `maximal`. See `references/design-systems.md` for how to choose; default to `minimal` if unspecified.
+> Which design system would you like? Pick one:
+> - **minimal** — Monochrome + accents, system font. Clean, quiet baseline.
+> - **material** — Google MD3. Roboto, tonal palette, shape + elevation scales, full type roles.
+> - **carbon** — IBM Carbon v11. Plex Sans, sharp, 16-step gray, high-contrast enterprise.
+> - **fluent** — Microsoft Fluent 2. Segoe UI Variable, Communication Blue, two-layer elevation, 14 type-ramp roles.
+> - **maximal** — Expressive — vivid purple brand, 27 type roles, 18-step spacing, shadow-heavy.
+
+**The only two cases where you may skip the question:**
+
+1. The user named **one of the five system keys verbatim** (case-insensitive) in their triggering message: `minimal` / `material` / `carbon` / `fluent` / `maximal`, or a clearly equivalent proper name ("Material Design", "MD3", "IBM Carbon", "Fluent 2", "Fluent UI"). Use that system.
+2. You are regenerating an existing `<output>/` and the top-level `index.css` header comment already records the chosen system. Reuse it unless the user asked to switch.
+
+**Vibe descriptions are NOT system names — still ask.** Examples that look like hints but are not: "modern / clean / playful / enterprise / AI vibe / dark-mode / brutalist / pastel / minimal look / corporate / consumer / dev-tool". Present the list and let the user choose. You may add a one-sentence suggestion next to the question (e.g., "AI vibe coding often pairs with **maximal** for expressive chrome or **fluent** for crisp Microsoft-style UI — your call.") but the choice is still theirs.
+
+**If the user replies with "whatever / default / any / no preference" to the question above:** pick `minimal`, **tell them that's what you're using, and offer to switch** — do not treat this as authorization to skip the question on the next first-time invocation.
+
+Once the system is chosen, also infer or ask (these rarely warrant a follow-up — infer when possible):
+
 - **Output directory?** Default: `styleguide-preview` relative to the current working directory.
 - **Preview?** On by default. Skip preview files only if the user says things like "tokens only", "no preview", "skip preview", "no html", or "just the CSS".
 
@@ -114,13 +157,17 @@ Copy blocks **verbatim** from `references/<system>.md`:
 | `## primitives/palette.css` | `<output>/primitives/palette.css` |
 | `## primitives/size.css` | `<output>/primitives/size.css` |
 | `## primitives/typography.css` | `<output>/primitives/typography.css` |
+| `## primitives/motion.css` (if present) | `<output>/primitives/motion.css` |
+| `## primitives/effects.css` (if present) | `<output>/primitives/effects.css` |
 | `## theme.css` | `<output>/theme.css` |
-| `## extras.css` (if present) | `<output>/extras.css` |
+| `## components/typography.css` | `<output>/components/typography.css` |
+| `## components/effects.css` (if present) | `<output>/components/effects.css` |
 
 From `references/preview.md`:
 
 | Source block | Write to |
 |---|---|
+| `## components/color.css` | `<output>/components/color.css` |
 | `## components/button.css` | `<output>/components/button.css` |
 | `## components/form.css` | `<output>/components/form.css` |
 | `## components/badge.css` | `<output>/components/badge.css` |
@@ -133,17 +180,36 @@ From `references/preview.md`:
 | `## components/link.css` | `<output>/components/link.css` |
 | `## components/index.css` | `<output>/components/index.css` |
 
-Always also write `<output>/primitives/index.css` with exactly:
+Always also write `<output>/primitives/index.css`. Base template:
 
 ```css
 @import './palette.css';
 @import './size.css';
 @import './typography.css';
+@import './motion.css';
+@import './effects.css';
 ```
+
+Include the `motion.css` / `effects.css` lines **only for systems that define those files**. For reference:
+
+- **motion.css**: Material (MD3 motion timings), Fluent (Fluent 2 durations + easing curves), plus any system with additional motion tokens.
+- **effects.css**: Material (MD3 elevation), Fluent (two-layer Fluent shadows, light + dark), Maximal (elevation).
+
+Minimal and Carbon have neither — their `primitives/index.css` is three lines.
+
+Similarly, `<output>/components/index.css` imports `effects.css` only for systems that ship one (today: Maximal if the user opts in to glow/sweep-style effects; the stock references don't ship a `components/effects.css`).
 
 Don't invent values. If something looks wrong in the reference, fix the reference first and then regenerate.
 
-The `components/` directory is written even when the user asks to skip the preview — components are part of "what the skill produces".
+**If the user asks for tokens or effects that don't exist in any reference** (custom additions like `--glow-*`, `--sweep-*`, project-specific brand tokens, gradient tokens, animation keyframes, etc.) — do NOT silently invent them. Instead, after the base system is chosen, ask:
+
+> "[Those tokens] aren't in the `<system>` reference. Two options:
+> (a) One-off — add them to `<output>/` for this project only, dropping them into the concern-appropriate file (`primitives/effects.css` for shadows/glows/gradients, `primitives/motion.css` for timing, `components/effects.css` for classes like `.glow`). They'll be lost the next time you regenerate.
+> (b) Permanent — add them to `references/<system>.md` first so they survive regeneration. I can do either — which do you want?"
+
+Wait for the answer. Never write unreferenced tokens on your own judgment. When creating new token groups, use concern-named files rather than a catch-all.
+
+The `components/` directory is written even when the user asks to skip the preview — components are part of "what the skill produces". Typography is per-system, so it comes from `references/<system>.md`; the other ten class files are system-agnostic and come from `references/preview.md`.
 
 Finally, always write the top-level `<output>/index.css` — the single import entry point consumers use. Template:
 
@@ -161,18 +227,22 @@ Finally, always write the top-level `<output>/index.css` — the single import e
  *   2. Theme defaults to light. Toggle dark mode with:
  *        <html data-theme="dark">
  *      Remove the attribute (or set "light") to return to the default.
+ *   3. Style your markup with the classes from components/* (e.g. .btn,
+ *      .input, .heading-lg). Do not reference --* variables from consumer
+ *      code — treat them as internal.
  *
  * Layers (imported in this order — later layers depend on earlier ones):
- *   primitives → theme → extras (if any) → components
+ *   primitives (variables)
+ *     → theme (semantic variables, light + dark)
+ *       → components (classes)
  */
 
 @import './primitives/index.css';
 @import './theme.css';
-@import './extras.css';
 @import './components/index.css';
 ```
 
-Replace `{{SYSTEM_NAME}}` with the chosen system's display name (from `## Preview metadata` → name in the system reference). If the system has no `extras.css`, omit the `@import './extras.css';` line entirely — do not leave a dangling import.
+Replace `{{SYSTEM_NAME}}` with the chosen system's display name (from `## Preview metadata` → name in the system reference). Every system uses the same three-line import order — optional files like `primitives/motion.css`, `primitives/effects.css`, and `components/effects.css` are chained through `primitives/index.css` / `components/index.css`, so the top-level file never references them directly.
 
 ### 4. Write the preview (on by default)
 
@@ -184,11 +254,15 @@ Use the `## HTML template` from `references/preview.md`. Replace the `{{BUNDLED_
    2. `## primitives/palette.css` from `references/<system>.md`
    3. `## primitives/size.css` from `references/<system>.md`
    4. `## primitives/typography.css` from `references/<system>.md`
-   5. `## theme.css` from `references/<system>.md`
-   6. `## extras.css` from `references/<system>.md` (if present)
-   7. `## Base` from `references/preview.md`
-   8. All ten `## components/*.css` blocks from `references/preview.md` (skip `index.css` — it's `@import`-only and those imports won't resolve inline)
-   9. `## Preview chrome CSS` from `references/preview.md`
+   5. `## primitives/motion.css` from `references/<system>.md` (only if present)
+   6. `## primitives/effects.css` from `references/<system>.md` (only if present)
+   7. `## theme.css` from `references/<system>.md`
+   8. `## Base` from `references/preview.md`
+   9. `## components/typography.css` from `references/<system>.md`
+  10. `## components/color.css` from `references/preview.md`
+  11. Remaining ten system-agnostic `## components/*.css` blocks from `references/preview.md` (button, form, badge, avatar, card, alert, progress, tabs, table, link — skip `index.css` since it's `@import`-only and those imports won't resolve inline)
+  12. `## components/effects.css` from `references/<system>.md` (only if present)
+  13. `## Preview chrome CSS` from `references/preview.md`
 
 Then substitute the remaining placeholders per:
 
@@ -196,13 +270,19 @@ Then substitute the remaining placeholders per:
    |---|---|
    | `{{SYSTEM_NAME}}` | `## Preview metadata` → name, in the system reference |
    | `{{SYSTEM_DESCRIPTION}}` | `## Preview metadata` → description |
-   | `{{TYPOGRAPHY_ROWS}}` | Mutually exclusive: if the system defines type roles (Material, Uber Base, Carbon, Maximal), emit one row per role; otherwise (Minimal, Polaris, Radix) emit six rows — one per `--font-xs` … `--font-2xl`. Never both. Patterns in preview.md. |
-   | `{{SEMANTIC_SWATCHES}}` | One swatch div per key in the light `theme.css` `:root` block. |
-   | `{{PRIMITIVE_SWATCHES}}` | One swatch div per palette primitive from the system. |
-   | `{{SPACING_ROWS}}` | Five rows from the `--space-*` tokens. |
-   | `{{RADIUS_BOXES}}` | Three boxes from `--radius-sm/md/lg`. |
-   | `{{ELEVATION_SECTION}}` | Full section block if the system has elevation tokens, else empty string. |
+   | `{{FONT_FAMILY_ROWS}}` | Two fixed rows — one sample each for `--font-sans` and `--font-mono`. Pattern in preview.md. |
+   | `{{TYPOGRAPHY_ROWS}}` | Mutually exclusive: Minimal (the only system with `type_roles: none`) emits six rows — one per `--font-xs` … `--font-2xl`. Every other system emits one row per role listed in its Preview metadata. Never both. Patterns in preview.md. |
+   | `{{SEMANTIC_SWATCHES}}` | Exhaustive — one swatch per key in the light `theme.css` `:root` block. |
+   | `{{PRIMITIVE_SWATCHES}}` | Exhaustive — one swatch per **every** `--*` variable in `primitives/palette.css` (every ramp step + every accent), in source order. No skipping. |
+   | `{{SPACING_ROWS}}` | Exhaustive — one row per spacing token declared anywhere in `primitives/size.css`. Includes `--space-*` and any system-specific extensions like `--space-scale-*`. |
+   | `{{RADIUS_BOXES}}` | Exhaustive — one box per corner-radius / shape token declared in `primitives/size.css` (`--radius-*`, plus any `--md-shape-*` or similar if present). |
+   | `{{BUTTON_SIZE_ROWS}}` | Three value rows for `--btn-sm/md/lg`. Pattern in preview.md. |
+   | `{{MOTION_ROW}}` | One row with the `--transition` value and a hover demo. |
+   | `{{MOTION_SECTION}}` | Full section block listing every token in `primitives/motion.css` (easings + durations) with a hover demo per easing. Empty string if the system has no `primitives/motion.css`. |
+   | `{{EFFECTS_SECTION}}` | Full section block visualizing every token in `primitives/effects.css` — shadows as elevated boxes, glows as glowing boxes, gradients/sweeps rendered live. Empty string if the system has no `primitives/effects.css`. Subsumes the old `{{ELEVATION_SECTION}}`. |
    | `{{COMPONENTS_BLOCK}}` | Verbatim from `## Components HTML` in preview.md. |
+
+**Completeness test**: after substitution, every `--*` variable declared anywhere in `primitives/*` + `theme.css` must be visible somewhere in the preview. The `[data-var]` spans are refreshed by the theme-toggle script, so variable values stay live when the user switches light ↔ dark.
 
 ### 5. If existing files would be overwritten
 
@@ -218,32 +298,49 @@ After writing, tell the user:
 
 ## Invariants across systems
 
-Every system's output contains these semantic tokens. Consumers can read them without caring which system was picked.
+Every system's bundle is required to declare the following **minimum set of semantic token names**. Systems are free to add more tokens in the same files — the invariant is the names must exist, not that these are the only names. These are implementation details; classes in `components/` read them, consumers don't touch them directly.
 
-From `theme.css`: `--bg`, `--bg-subtle`, `--bg-muted`, `--bg-elevated`, `--fg`, `--fg-muted`, `--fg-subtle`, `--border`, `--border-strong`, `--accent`, `--accent-muted`, `--highlight`, `--highlight-muted`, `--danger`, `--success`, `--warning`.
+From `theme.css`: `--bg`, `--bg-subtle`, `--bg-muted`, `--bg-elevated`, `--fg`, `--fg-muted`, `--fg-subtle`, `--border`, `--border-strong`, `--accent`, `--accent-muted`, `--highlight`, `--highlight-muted`, `--danger`, `--success`, `--warning`. (Plus any semantic role mappings the system adds — e.g. `--overlay-dim`, `--icon-color-*`.)
 
-From primitives: `--font-sans`, `--font-mono`, `--font-xs` … `--font-2xl`, `--space-xs` … `--space-xl`, `--radius-sm/md/lg`, `--btn-sm/md/lg`, `--transition`.
+From `primitives/typography.css`: `--font-sans`, `--font-mono`, `--font-xs` … `--font-2xl`. (Plus any `--typography-<role>-*` tokens the system adds.)
 
-Everything else is a system-specific extra — keep it in `extras.css`.
+From `primitives/size.css`: `--space-xs` … `--space-xl`, `--radius-sm/md/lg`, `--btn-sm/md/lg`, `--transition`. (Plus any `--space-scale-*`, `--md-shape-*`, icon sizing, etc.)
+
+### Where does a new token belong?
+
+| Token flavor | File |
+|---|---|
+| Raw color (ramp step, brand accent, named hue) | `primitives/palette.css` |
+| Any length / duration / numeric scale (spacing, radius, sizing, default transition) | `primitives/size.css` |
+| Font family / size / weight / line / letter / role | `primitives/typography.css` |
+| Motion token beyond `--transition` (easing curve, named duration) | `primitives/motion.css` |
+| Shadow, elevation, glow, gradient used as visual effect | `primitives/effects.css` |
+| Semantic color role mapping (`--overlay-dim`, `--icon-color-main`, …) | `theme.css` |
+| Effect class (`.glow`, `.sweep`, `.glow-sweep`) + its `@keyframes` | `components/effects.css` |
+
+There is no `extras.css` and no catch-all. If a new token doesn't fit an existing file, create a new concern-named primitive file (`primitives/<concern>.css`) rather than reaching for a generic bucket.
 
 ## Adding a new system
 
 If the user wants a system not in the list (Fluent, Ant Design, Atlassian, Tailwind defaults, custom house style…):
 
-1. Add `references/<new-system>.md` using the same section structure as the existing six files: palette / size / typography / theme / extras / Preview metadata / Source.
+1. Add `references/<new-system>.md` using the section structure: `primitives/palette.css` / `primitives/size.css` / `primitives/typography.css` / `primitives/motion.css` (optional) / `primitives/effects.css` (optional) / `theme.css` / `components/typography.css` / `components/effects.css` (optional) / Preview metadata / Source.
 2. Pull values from the upstream spec; note the source URL.
-3. Run the same workflow against the new reference.
+3. **Classify each token using the table above.** Omit the optional files entirely when not used.
+4. In `components/typography.css`, emit one class per type role (or `.text-xs`..`.text-2xl` if the system has no roles). Classes must read only from variables defined in this system's primitives + theme.
+5. Run the same workflow against the new reference.
 
-Keep the semantic token names identical — only values and extras change per system.
+Keep the minimum semantic token names intact — everything else is free to vary per system.
 
 ## References
 
 - `references/design-systems.md` — selection guide and invariants.
-- `references/preview.md` — shared reset + base + preview CSS + HTML template + components block.
-- `references/<system>.md` × 6 — per-system CSS blocks, one per file.
+- `references/preview.md` — shared reset + base + preview CSS + HTML template + 10 system-agnostic components.
+- `references/<system>.md` × 5 — per-system CSS blocks including `components/typography.css`. Currently: `minimal.md`, `material.md`, `carbon.md`, `fluent.md`, `maximal.md`.
 
 ## What this skill does not do
 
-- **No automatic project integration.** The output sits in the directory you pass. Wiring is one line: `@import '<output>/index.css';` from a root stylesheet (or a `<link>` tag in HTML). The top-level `index.css` chains primitives → theme → extras → components for you.
+- **No automatic project integration.** The output sits in the directory you pass. Wiring is one line: `@import '<output>/index.css';` from a root stylesheet (or a `<link>` tag in HTML). The top-level `index.css` chains primitives → theme → components for you.
 - **No script runner.** Generation is manual — open references, write files. Keeps the skill light and transparent.
 - **No namespace guarantee.** `components/` uses plain class names (`.btn`, `.input`, `.card`, …). If any clash with your codebase, rename via global search-and-replace before importing.
+- **Utility classes are limited to color and typography.** `components/color.css` ships `.bg-*` / `.text-*` / `.border-*` for every semantic role because tinting is universal. `components/typography.css` ships per-system type utilities. Spacing and radius stay internal — no `.p-md` / `.rounded-md` layer. If you need a custom surface with specific padding / radius, build it in your own CSS, composed from the component classes.

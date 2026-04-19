@@ -53,12 +53,32 @@ The counterpart to Minimal. Where Minimal strips ornament, Maximal embraces it: 
 
 ```css
 :root {
-	/* Spacing — semantic subset. Full 18-step ladder in extras.css */
+	/* Spacing — semantic subset */
 	--space-xs: 4px;
 	--space-sm: 8px;
 	--space-md: 16px;
 	--space-lg: 24px;
 	--space-xl: 40px;
+
+	/* Extended spacing ladder — numeric 18-step */
+	--space-scale-2: 2px;
+	--space-scale-4: 4px;
+	--space-scale-8: 8px;
+	--space-scale-12: 12px;
+	--space-scale-16: 16px;
+	--space-scale-20: 20px;
+	--space-scale-24: 24px;
+	--space-scale-28: 28px;
+	--space-scale-32: 32px;
+	--space-scale-40: 40px;
+	--space-scale-48: 48px;
+	--space-scale-60: 60px;
+	--space-scale-70: 70px;
+	--space-scale-80: 80px;
+	--space-scale-100: 100px;
+	--space-scale-120: 120px;
+	--space-scale-140: 140px;
+	--space-scale-180: 180px;
 
 	/* Button size — three hierarchy levels */
 	--btn-sm: 40px;
@@ -69,6 +89,10 @@ The counterpart to Minimal. Where Minimal strips ornament, Maximal embraces it: 
 	--radius-sm: 4px;
 	--radius-md: 8px;
 	--radius-lg: 16px;
+
+	/* Icon sizing */
+	--icon-size: 24px;
+	--icon-stroke: 2px;
 
 	/* Transition */
 	--transition: 150ms ease;
@@ -94,116 +118,6 @@ The counterpart to Minimal. Where Minimal strips ornament, Maximal embraces it: 
 	/* Default tracking */
 	--letter-spacing-tight: -0.025em;
 	--letter-spacing-normal: 0;
-}
-```
-
-## theme.css
-
-```css
-:root {
-	color-scheme: light;
-
-	--bg: var(--white);
-	--bg-subtle: var(--bg-light);
-	--bg-muted: var(--bg-strong);
-	--bg-elevated: var(--line-medium);
-
-	--fg: var(--fg-color-main);
-	--fg-muted: var(--fg-color-sub-1);
-	--fg-subtle: var(--fg-color-sub-2);
-
-	--border: var(--line-medium);
-	--border-strong: var(--line-strong);
-
-	--accent: var(--brand-main);
-	--accent-muted: color-mix(in srgb, var(--brand-main) 12%, transparent);
-
-	--highlight: var(--brand-main);
-	--highlight-muted: color-mix(in srgb, var(--brand-main) 10%, transparent);
-
-	--danger: var(--status-danger);
-	--success: var(--status-success);
-	--warning: var(--status-warning);
-}
-
-[data-theme='dark'] {
-	color-scheme: dark;
-
-	--bg: var(--dark-bg);
-	--bg-subtle: var(--dark-bg-subtle);
-	--bg-muted: var(--dark-bg-muted);
-	--bg-elevated: var(--dark-bg-elevated);
-
-	--fg: var(--dark-fg);
-	--fg-muted: var(--dark-fg-muted);
-	--fg-subtle: var(--dark-fg-subtle);
-
-	--border: var(--dark-border);
-	--border-strong: var(--dark-border-strong);
-
-	--accent: #8E4BFF;
-	--accent-muted: var(--dark-accent-muted);
-
-	--highlight: #8E4BFF;
-	--highlight-muted: var(--dark-accent-muted);
-
-	--danger: #FF6A5E;
-	--success: #52C785;
-	--warning: #FFC453;
-}
-
-@media (prefers-color-scheme: dark) {
-	[data-theme='system'] {
-		color-scheme: dark;
-
-		--bg: var(--dark-bg);
-		--bg-subtle: var(--dark-bg-subtle);
-		--bg-muted: var(--dark-bg-muted);
-		--bg-elevated: var(--dark-bg-elevated);
-
-		--fg: var(--dark-fg);
-		--fg-muted: var(--dark-fg-muted);
-		--fg-subtle: var(--dark-fg-subtle);
-
-		--border: var(--dark-border);
-		--border-strong: var(--dark-border-strong);
-
-		--accent: #8E4BFF;
-		--accent-muted: var(--dark-accent-muted);
-
-		--highlight: #8E4BFF;
-		--highlight-muted: var(--dark-accent-muted);
-
-		--danger: #FF6A5E;
-		--success: #52C785;
-		--warning: #FFC453;
-	}
-}
-```
-
-## extras.css
-
-```css
-:root {
-	/* Extended spacing ladder */
-	--space-scale-2: 2px;
-	--space-scale-4: 4px;
-	--space-scale-8: 8px;
-	--space-scale-12: 12px;
-	--space-scale-16: 16px;
-	--space-scale-20: 20px;
-	--space-scale-24: 24px;
-	--space-scale-28: 28px;
-	--space-scale-32: 32px;
-	--space-scale-40: 40px;
-	--space-scale-48: 48px;
-	--space-scale-60: 60px;
-	--space-scale-70: 70px;
-	--space-scale-80: 80px;
-	--space-scale-100: 100px;
-	--space-scale-120: 120px;
-	--space-scale-140: 140px;
-	--space-scale-180: 180px;
 
 	/* Display roles */
 	--typography-display-1-size: 56px;
@@ -276,23 +190,156 @@ The counterpart to Minimal. Where Minimal strips ornament, Maximal embraces it: 
 	--typography-button-3-line: 18px;
 	--typography-button-4-size: 12px;
 	--typography-button-4-line: 18px;
+}
+```
 
+## theme.css
+
+```css
+:root {
+	color-scheme: light;
+
+	--bg: var(--white);
+	--bg-subtle: var(--bg-light);
+	--bg-muted: var(--bg-strong);
+	--bg-elevated: var(--line-medium);
+
+	--fg: var(--fg-color-main);
+	--fg-muted: var(--fg-color-sub-1);
+	--fg-subtle: var(--fg-color-sub-2);
+
+	--border: var(--line-medium);
+	--border-strong: var(--line-strong);
+
+	--accent: var(--brand-main);
+	--accent-muted: color-mix(in srgb, var(--brand-main) 12%, transparent);
+
+	--highlight: var(--brand-main);
+	--highlight-muted: color-mix(in srgb, var(--brand-main) 10%, transparent);
+
+	--danger: var(--status-danger);
+	--success: var(--status-success);
+	--warning: var(--status-warning);
+
+	--overlay-dim: rgba(0, 0, 0, 0.6);
+
+	--icon-color-main: var(--fg);
+	--icon-color-sub-1: var(--fg-muted);
+	--icon-color-sub-2: var(--fg-subtle);
+	--icon-color-disabled: color-mix(in srgb, var(--fg) 30%, transparent);
+	--icon-color-inverted: var(--bg);
+}
+
+[data-theme='dark'] {
+	color-scheme: dark;
+
+	--bg: var(--dark-bg);
+	--bg-subtle: var(--dark-bg-subtle);
+	--bg-muted: var(--dark-bg-muted);
+	--bg-elevated: var(--dark-bg-elevated);
+
+	--fg: var(--dark-fg);
+	--fg-muted: var(--dark-fg-muted);
+	--fg-subtle: var(--dark-fg-subtle);
+
+	--border: var(--dark-border);
+	--border-strong: var(--dark-border-strong);
+
+	--accent: #8E4BFF;
+	--accent-muted: var(--dark-accent-muted);
+
+	--highlight: #8E4BFF;
+	--highlight-muted: var(--dark-accent-muted);
+
+	--danger: #FF6A5E;
+	--success: #52C785;
+	--warning: #FFC453;
+
+	--overlay-dim: rgba(0, 0, 0, 0.72);
+
+	--icon-color-main: var(--fg);
+	--icon-color-sub-1: var(--fg-muted);
+	--icon-color-sub-2: var(--fg-subtle);
+	--icon-color-disabled: color-mix(in srgb, var(--fg) 30%, transparent);
+	--icon-color-inverted: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+	[data-theme='system'] {
+		color-scheme: dark;
+
+		--bg: var(--dark-bg);
+		--bg-subtle: var(--dark-bg-subtle);
+		--bg-muted: var(--dark-bg-muted);
+		--bg-elevated: var(--dark-bg-elevated);
+
+		--fg: var(--dark-fg);
+		--fg-muted: var(--dark-fg-muted);
+		--fg-subtle: var(--dark-fg-subtle);
+
+		--border: var(--dark-border);
+		--border-strong: var(--dark-border-strong);
+
+		--accent: #8E4BFF;
+		--accent-muted: var(--dark-accent-muted);
+
+		--highlight: #8E4BFF;
+		--highlight-muted: var(--dark-accent-muted);
+
+		--danger: #FF6A5E;
+		--success: #52C785;
+		--warning: #FFC453;
+	}
+}
+```
+
+## primitives/effects.css
+
+```css
+:root {
 	/* Elevation — two levels */
 	--elevation-1: 0 2px 8px rgba(17, 17, 17, 0.06), 0 1px 2px rgba(17, 17, 17, 0.04);
 	--elevation-2: 0 8px 24px rgba(17, 17, 17, 0.10), 0 2px 6px rgba(17, 17, 17, 0.06);
-
-	/* Overlay dim for modal chrome */
-	--overlay-dim: rgba(0, 0, 0, 0.6);
-
-	/* Icon defaults */
-	--icon-size: 24px;
-	--icon-stroke: 2px;
-	--icon-color-main: var(--fg-color-main);
-	--icon-color-sub-1: var(--fg-color-sub-1);
-	--icon-color-sub-2: var(--fg-color-sub-2);
-	--icon-color-disabled: var(--fg-color-disabled);
-	--icon-color-inverted: var(--white);
 }
+```
+
+## components/typography.css
+
+Maximal's role-weight values live only in the preview metadata (not as variables), so the classes set `font-weight` literally. Sizes, line-heights, and display `letter-spacing` come from `--typography-*` tokens.
+
+```css
+.display-1 { font-size: var(--typography-display-1-size); line-height: var(--typography-display-1-line); letter-spacing: var(--typography-display-1-tracking); font-weight: 600; }
+.display-2 { font-size: var(--typography-display-2-size); line-height: var(--typography-display-2-line); letter-spacing: var(--typography-display-2-tracking); font-weight: 600; }
+.display-3 { font-size: var(--typography-display-3-size); line-height: var(--typography-display-3-line); letter-spacing: var(--typography-display-3-tracking); font-weight: 600; }
+.display-4 { font-size: var(--typography-display-4-size); line-height: var(--typography-display-4-line); letter-spacing: var(--typography-display-4-tracking); font-weight: 600; }
+.display-5 { font-size: var(--typography-display-5-size); line-height: var(--typography-display-5-line); letter-spacing: var(--typography-display-5-tracking); font-weight: 600; }
+.display-6 { font-size: var(--typography-display-6-size); line-height: var(--typography-display-6-line); letter-spacing: var(--typography-display-6-tracking); font-weight: 600; }
+
+.headline-1 { font-size: var(--typography-headline-1-size); line-height: var(--typography-headline-1-line); font-weight: 600; }
+.headline-2 { font-size: var(--typography-headline-2-size); line-height: var(--typography-headline-2-line); font-weight: 600; }
+.headline-3 { font-size: var(--typography-headline-3-size); line-height: var(--typography-headline-3-line); font-weight: 600; }
+.headline-4 { font-size: var(--typography-headline-4-size); line-height: var(--typography-headline-4-line); font-weight: 600; }
+.headline-5 { font-size: var(--typography-headline-5-size); line-height: var(--typography-headline-5-line); font-weight: 600; }
+.headline-6 { font-size: var(--typography-headline-6-size); line-height: var(--typography-headline-6-line); font-weight: 600; }
+
+.title-1 { font-size: var(--typography-title-1-size); line-height: var(--typography-title-1-line); font-weight: 600; }
+.title-2 { font-size: var(--typography-title-2-size); line-height: var(--typography-title-2-line); font-weight: 600; }
+.title-3 { font-size: var(--typography-title-3-size); line-height: var(--typography-title-3-line); font-weight: 600; }
+.title-4 { font-size: var(--typography-title-4-size); line-height: var(--typography-title-4-line); font-weight: 600; }
+
+.body-1 { font-size: var(--typography-body-1-size); line-height: var(--typography-body-1-line); font-weight: 400; }
+.body-2 { font-size: var(--typography-body-2-size); line-height: var(--typography-body-2-line); font-weight: 400; }
+.body-3 { font-size: var(--typography-body-3-size); line-height: var(--typography-body-3-line); font-weight: 400; }
+.body-4 { font-size: var(--typography-body-4-size); line-height: var(--typography-body-4-line); font-weight: 400; }
+
+.caption-1 { font-size: var(--typography-caption-1-size); line-height: var(--typography-caption-1-line); font-weight: 400; }
+.caption-2 { font-size: var(--typography-caption-2-size); line-height: var(--typography-caption-2-line); font-weight: 400; }
+.caption-3 { font-size: var(--typography-caption-3-size); line-height: var(--typography-caption-3-line); font-weight: 400; }
+
+.button-1 { font-size: var(--typography-button-1-size); line-height: var(--typography-button-1-line); font-weight: 600; }
+.button-2 { font-size: var(--typography-button-2-size); line-height: var(--typography-button-2-line); font-weight: 600; }
+.button-3 { font-size: var(--typography-button-3-size); line-height: var(--typography-button-3-line); font-weight: 600; }
+.button-4 { font-size: var(--typography-button-4-size); line-height: var(--typography-button-4-line); font-weight: 600; }
 ```
 
 ## Preview metadata

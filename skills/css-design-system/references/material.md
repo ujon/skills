@@ -74,6 +74,15 @@ Google's Material 3. Recognizable, heavily specified, a solid pick when the user
 	--radius-md: 12px;
 	--radius-lg: 16px;
 
+	/* MD3 full shape scale */
+	--md-shape-none: 0;
+	--md-shape-xs: 4px;
+	--md-shape-sm: 8px;
+	--md-shape-md: 12px;
+	--md-shape-lg: 16px;
+	--md-shape-xl: 28px;
+	--md-shape-full: 9999px;
+
 	/* Transition */
 	--transition: 200ms cubic-bezier(0.2, 0, 0, 1);
 }
@@ -94,6 +103,53 @@ Google's Material 3. Recognizable, heavily specified, a solid pick when the user
 	--font-lg: 22px;  /* ≈ title-large */
 	--font-xl: 28px;  /* ≈ headline-medium */
 	--font-2xl: 36px; /* ≈ display-small */
+
+	/* MD3 full type roles */
+	--typography-display-large-size: 57px;
+	--typography-display-large-line: 64px;
+	--typography-display-large-weight: 400;
+	--typography-display-medium-size: 45px;
+	--typography-display-medium-line: 52px;
+	--typography-display-medium-weight: 400;
+	--typography-display-small-size: 36px;
+	--typography-display-small-line: 44px;
+	--typography-display-small-weight: 400;
+	--typography-headline-large-size: 32px;
+	--typography-headline-large-line: 40px;
+	--typography-headline-large-weight: 400;
+	--typography-headline-medium-size: 28px;
+	--typography-headline-medium-line: 36px;
+	--typography-headline-medium-weight: 400;
+	--typography-headline-small-size: 24px;
+	--typography-headline-small-line: 32px;
+	--typography-headline-small-weight: 400;
+	--typography-title-large-size: 22px;
+	--typography-title-large-line: 28px;
+	--typography-title-large-weight: 400;
+	--typography-title-medium-size: 16px;
+	--typography-title-medium-line: 24px;
+	--typography-title-medium-weight: 500;
+	--typography-title-small-size: 14px;
+	--typography-title-small-line: 20px;
+	--typography-title-small-weight: 500;
+	--typography-body-large-size: 16px;
+	--typography-body-large-line: 24px;
+	--typography-body-large-weight: 400;
+	--typography-body-medium-size: 14px;
+	--typography-body-medium-line: 20px;
+	--typography-body-medium-weight: 400;
+	--typography-body-small-size: 12px;
+	--typography-body-small-line: 16px;
+	--typography-body-small-weight: 400;
+	--typography-label-large-size: 14px;
+	--typography-label-large-line: 20px;
+	--typography-label-large-weight: 500;
+	--typography-label-medium-size: 12px;
+	--typography-label-medium-line: 16px;
+	--typography-label-medium-weight: 500;
+	--typography-label-small-size: 11px;
+	--typography-label-small-line: 16px;
+	--typography-label-small-weight: 500;
 }
 ```
 
@@ -181,73 +237,23 @@ Google's Material 3. Recognizable, heavily specified, a solid pick when the user
 }
 ```
 
-## extras.css
+## primitives/motion.css
 
 ```css
 :root {
-	/* MD3 full type roles */
-	--typography-display-large-size: 57px;
-	--typography-display-large-line: 64px;
-	--typography-display-large-weight: 400;
-	--typography-display-medium-size: 45px;
-	--typography-display-medium-line: 52px;
-	--typography-display-medium-weight: 400;
-	--typography-display-small-size: 36px;
-	--typography-display-small-line: 44px;
-	--typography-display-small-weight: 400;
-	--typography-headline-large-size: 32px;
-	--typography-headline-large-line: 40px;
-	--typography-headline-large-weight: 400;
-	--typography-headline-medium-size: 28px;
-	--typography-headline-medium-line: 36px;
-	--typography-headline-medium-weight: 400;
-	--typography-headline-small-size: 24px;
-	--typography-headline-small-line: 32px;
-	--typography-headline-small-weight: 400;
-	--typography-title-large-size: 22px;
-	--typography-title-large-line: 28px;
-	--typography-title-large-weight: 400;
-	--typography-title-medium-size: 16px;
-	--typography-title-medium-line: 24px;
-	--typography-title-medium-weight: 500;
-	--typography-title-small-size: 14px;
-	--typography-title-small-line: 20px;
-	--typography-title-small-weight: 500;
-	--typography-body-large-size: 16px;
-	--typography-body-large-line: 24px;
-	--typography-body-large-weight: 400;
-	--typography-body-medium-size: 14px;
-	--typography-body-medium-line: 20px;
-	--typography-body-medium-weight: 400;
-	--typography-body-small-size: 12px;
-	--typography-body-small-line: 16px;
-	--typography-body-small-weight: 400;
-	--typography-label-large-size: 14px;
-	--typography-label-large-line: 20px;
-	--typography-label-large-weight: 500;
-	--typography-label-medium-size: 12px;
-	--typography-label-medium-line: 16px;
-	--typography-label-medium-weight: 500;
-	--typography-label-small-size: 11px;
-	--typography-label-small-line: 16px;
-	--typography-label-small-weight: 500;
-
-	/* MD3 full shape scale */
-	--md-shape-none: 0;
-	--md-shape-xs: 4px;
-	--md-shape-sm: 8px;
-	--md-shape-md: 12px;
-	--md-shape-lg: 16px;
-	--md-shape-xl: 28px;
-	--md-shape-full: 9999px;
-
 	/* MD3 motion */
 	--md-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
 	--md-motion-easing-emphasized: cubic-bezier(0.3, 0, 0, 1);
 	--md-motion-duration-short: 200ms;
 	--md-motion-duration-medium: 400ms;
 	--md-motion-duration-long: 600ms;
+}
+```
 
+## primitives/effects.css
+
+```css
+:root {
 	/* MD3 elevation */
 	--elevation-0: none;
 	--elevation-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
@@ -256,6 +262,26 @@ Google's Material 3. Recognizable, heavily specified, a solid pick when the user
 	--elevation-4: 0 6px 10px 4px rgba(0, 0, 0, 0.15), 0 2px 3px rgba(0, 0, 0, 0.3);
 	--elevation-5: 0 8px 12px 6px rgba(0, 0, 0, 0.15), 0 4px 4px rgba(0, 0, 0, 0.3);
 }
+```
+
+## components/typography.css
+
+```css
+.display-large   { font-size: var(--typography-display-large-size);   line-height: var(--typography-display-large-line);   font-weight: var(--typography-display-large-weight); }
+.display-medium  { font-size: var(--typography-display-medium-size);  line-height: var(--typography-display-medium-line);  font-weight: var(--typography-display-medium-weight); }
+.display-small   { font-size: var(--typography-display-small-size);   line-height: var(--typography-display-small-line);   font-weight: var(--typography-display-small-weight); }
+.headline-large  { font-size: var(--typography-headline-large-size);  line-height: var(--typography-headline-large-line);  font-weight: var(--typography-headline-large-weight); }
+.headline-medium { font-size: var(--typography-headline-medium-size); line-height: var(--typography-headline-medium-line); font-weight: var(--typography-headline-medium-weight); }
+.headline-small  { font-size: var(--typography-headline-small-size);  line-height: var(--typography-headline-small-line);  font-weight: var(--typography-headline-small-weight); }
+.title-large     { font-size: var(--typography-title-large-size);     line-height: var(--typography-title-large-line);     font-weight: var(--typography-title-large-weight); }
+.title-medium    { font-size: var(--typography-title-medium-size);    line-height: var(--typography-title-medium-line);    font-weight: var(--typography-title-medium-weight); }
+.title-small     { font-size: var(--typography-title-small-size);     line-height: var(--typography-title-small-line);     font-weight: var(--typography-title-small-weight); }
+.body-large      { font-size: var(--typography-body-large-size);      line-height: var(--typography-body-large-line);      font-weight: var(--typography-body-large-weight); }
+.body-medium     { font-size: var(--typography-body-medium-size);     line-height: var(--typography-body-medium-line);     font-weight: var(--typography-body-medium-weight); }
+.body-small      { font-size: var(--typography-body-small-size);      line-height: var(--typography-body-small-line);      font-weight: var(--typography-body-small-weight); }
+.label-large     { font-size: var(--typography-label-large-size);     line-height: var(--typography-label-large-line);     font-weight: var(--typography-label-large-weight); }
+.label-medium    { font-size: var(--typography-label-medium-size);    line-height: var(--typography-label-medium-line);    font-weight: var(--typography-label-medium-weight); }
+.label-small     { font-size: var(--typography-label-small-size);     line-height: var(--typography-label-small-line);     font-weight: var(--typography-label-small-weight); }
 ```
 
 ## Preview metadata

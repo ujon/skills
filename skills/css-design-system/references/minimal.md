@@ -148,9 +148,22 @@ Monochrome + accents, system-font stack. The simplest system — a tidy set of C
 }
 ```
 
-## extras.css
+## primitives/motion.css · primitives/effects.css
 
-None. Minimal has no system-specific tokens beyond the invariants.
+Neither. Minimal has no motion or effects tokens beyond the invariant `--transition` — skip both files and omit their imports from `primitives/index.css`.
+
+## components/typography.css
+
+```css
+.text-xs  { font-size: var(--font-xs); }
+.text-sm  { font-size: var(--font-sm); }
+.text-md  { font-size: var(--font-md); }
+.text-lg  { font-size: var(--font-lg); }
+.text-xl  { font-size: var(--font-xl); }
+.text-2xl { font-size: var(--font-2xl); }
+
+.font-mono { font-family: var(--font-mono); }
+```
 
 ## Preview metadata
 
