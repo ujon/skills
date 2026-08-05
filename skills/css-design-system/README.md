@@ -27,26 +27,25 @@ Ask your coding agent to create a CSS design system:
 create a CSS design system for this app
 ```
 
-The default design system and themes are stored in skill metadata.
+The default design system and themes are set in the `## Settings` block at the top of `SKILL.md`:
 
 ```yaml
-metadata:
-  author: ujon
-  design_system: simple
-  theme:
-    - light
-    - dark
-    - system
-  version: "1.0.0"
+design_system: simple
+theme:
+  - light
+  - dark
+  - system
 ```
+
+Settings sit at the top of the body rather than in YAML frontmatter because skill loaders strip frontmatter before handing the file to the agent. Keeping them in the body means the agent already has the values and never opens `SKILL.md` to look them up.
 
 Command rules:
 
 - `preview`: create `preview.html` only for explicit preview commands.
-- `design-system`: when the user names a design system, update `metadata.design_system` before generation.
-- `themes`: when the user names themes, update `metadata.theme` before generation.
+- `design-system`: when the user names a design system, update `design_system` in Settings before generation.
+- `themes`: when the user names themes, update `theme` in Settings before generation.
 
-The selected design system follows `metadata.design_system`. On first use in a codebase, if existing styles clearly match another system, the agent should ask whether to update the metadata before generating. For named external systems, the agent should inspect official or primary documentation and consider the system's documented default theme model before writing `theme.css`.
+The selected design system follows `design_system`. On first use in a codebase, if existing styles clearly match another system, the agent should ask whether to update the setting before generating. For named external systems, the agent should inspect official or primary documentation and consider the system's documented default theme model before writing `theme.css`.
 
 Examples that update skill settings before generation:
 

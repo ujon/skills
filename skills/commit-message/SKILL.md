@@ -4,18 +4,35 @@ description: Format Git commit messages with a one-line summary plus title-case 
 license: MIT
 metadata:
   author: ujon
-  locale: en
-  version: 1.0.1
+  version: 1.0.2
 ---
 
 # Commit Message
 
-## Preflight (do this first)
+## Settings
 
-Before writing anything, open this file (`SKILL.md`) and read the `metadata.locale`
-value from its YAML frontmatter. Write all commit message content in that locale.
-This value is the single source of truth — never infer the language from the
+```yaml
+locale: en
+```
+
+Skill loaders strip YAML frontmatter, so settings live here at the top of the body.
+They are already in your context — never open this file to look them up. `locale` is
+the single source of truth for the message language: never infer it from the
 conversation, the user's messages, the repository, or prior commits.
+
+## Context Budget
+
+Spend the least context needed to explain *why* the change was made, then stop.
+
+1. If you made the changes in this session you already know why — write the message
+   directly. Use `git status --short` only to confirm what is actually staged.
+2. Otherwise start with `git diff --staged --stat` (`git diff --stat` when nothing is
+   staged) to see the shape of the change.
+3. Open a real diff only for the files whose intent the stat leaves unclear, one path
+   at a time: `git diff --staged -- <path>`.
+
+Never dump a full diff you do not need, and skip lockfiles, generated output, and
+vendored paths.
 
 ## Format
 
@@ -32,10 +49,13 @@ conversation, the user's messages, the repository, or prior commits.
 
 ## Rules
 
-- Write the commit message content — the one-line summary, the body under `## Summary`, and the bullets under `## Changes` — in the `metadata.locale` read during Preflight. If you have not read it yet, stop and read it now; do not guess.
+- Write the one-line summary, the `## Summary` body, and the `## Changes` bullets in
+  the configured `locale`.
+- Keep the `## Summary` and `## Changes` headers in English and title case.
 - Do not use prefix or scope tags such as `feat:`, `fix:`, or `chore:`.
-- Keep `## Summary` and `## Changes` headers in English and title case.
 - Explain why the change was made, not only what changed.
+- Group related edits into one bullet by intent instead of enumerating every touched
+  file. Keep `## Changes` to the bullets that carry meaning, usually 2-6.
 
 ## Example
 

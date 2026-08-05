@@ -4,15 +4,22 @@ description: Create or update a CSS design system with tokens, themes, layers, c
 license: MIT
 metadata:
   author: ujon
-  design_system: simple
-  theme:
-    - light
-    - dark
-    - system
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # CSS Design System
+
+## Settings
+
+```yaml
+design_system: simple
+theme:
+  - light
+  - dark
+  - system
+```
+
+Skill loaders strip YAML frontmatter, so settings live here at the top of the body. They are already in your context — never open this file to look them up. When a command changes a setting, rewrite the value in this block.
 
 Create CSS design-system foundations using CSS files only. Do not add Tailwind, Sass, component libraries, CDNs, build steps, or generated JavaScript.
 
@@ -34,9 +41,9 @@ Without one of those preview commands, write CSS files only.
 
 ### Design System
 
-Use `metadata.design_system` as the default design-system setting. Initial default is `simple`.
+Use `design_system` from Settings as the default design-system setting.
 
-When the user explicitly names a design system while asking to create, switch, migrate, or update the design system, update `metadata.design_system` in this `SKILL.md` before generating files.
+When the user explicitly names a design system while asking to create, switch, migrate, or update the design system, update `design_system` in Settings before generating files.
 
 ```text
 css-design-system design-system material-ui
@@ -51,16 +58,16 @@ If the requested system is external, inspect the codebase first, then search off
 
 Selection rules:
 
-1. Always use `metadata.design_system` as the selected design system unless the user explicitly names another one.
-2. If this appears to be the first time this skill is used in the codebase and existing styles clearly match a different design system, ask whether to update `metadata.design_system` to match before generating.
+1. Always use `design_system` as the selected design system unless the user explicitly names another one.
+2. If this appears to be the first time this skill is used in the codebase and existing styles clearly match a different design system, ask whether to update `design_system` to match before generating.
 3. Treat it as a first use when there is no existing generated CSS entry, no prior `css-design-system` comments, and no project documentation naming this skill.
-4. If `metadata.design_system` is `simple`, create a compact neutral CSS foundation with primitive tokens, semantic themes, base reset, and common component classes.
+4. If `design_system` is `simple`, create a compact neutral CSS foundation with primitive tokens, semantic themes, base reset, and common component classes.
 
 ### Themes
 
-Use `metadata.theme` as the default themes setting. Initial default is `light`, `dark`, and `system`.
+Use `theme` from Settings as the default themes setting.
 
-When the user explicitly names themes while asking to create, switch, migrate, or update the design system, update `metadata.theme` in this `SKILL.md` before generating files.
+When the user explicitly names themes while asking to create, switch, migrate, or update the design system, update `theme` in Settings before generating files.
 
 ```text
 css-design-system themes light dark system
@@ -68,12 +75,12 @@ css-design-system themes dark
 generate this design system with light, dark, and high-contrast themes
 ```
 
-Store theme names in `metadata.theme` as a YAML list.
+Store theme names in `theme` as a YAML list.
 
 Theme selection order:
 
 1. Follow existing codebase theme conventions.
-2. Otherwise use `metadata.theme`.
+2. Otherwise use `theme`.
 3. For a named external design system, consider that system's documented default theme model first, such as standard light/dark modes or default color-scheme assumptions.
 4. Add named themes with `[data-theme='<name>']` blocks and keep shared semantic token names stable across themes.
 
@@ -142,7 +149,7 @@ Theme:
 - Map primitive values to semantic tokens used by app CSS.
 - Suggested semantic colors: `--bg`, `--bg-subtle`, `--bg-muted`, `--bg-elevated`, `--fg`, `--fg-muted`, `--fg-subtle`, `--border`, `--border-strong`, `--accent`, `--accent-muted`, `--highlight`, `--highlight-muted`, `--danger`, `--success`, `--warning`.
 - Add, rename, or omit semantic tokens to match the codebase, but keep names stable once components depend on them.
-- Include `:root` for light theme, `[data-theme='dark']` for dark theme, and `[data-theme='system']` for system theme when `system` is listed in `metadata.theme`. Implement system theme with `prefers-color-scheme` unless the project already has another convention.
+- Include `:root` for light theme, `[data-theme='dark']` for dark theme, and `[data-theme='system']` for system theme when `system` is listed in `theme`. Implement system theme with `prefers-color-scheme` unless the project already has another convention.
 
 Use this as a simple starting scale only when the project has no established scale:
 
@@ -189,8 +196,8 @@ Base styles may live in `base.css` or the project's existing global stylesheet. 
 ## Workflow
 
 1. Inspect existing style files before writing.
-2. Apply command rules: update metadata when design system or themes are named, and keep preview opt-in.
-3. Use `metadata.design_system`; on first use, ask before changing it to match an existing codebase system.
+2. Apply command rules: update Settings when a design system or themes are named, and keep preview opt-in.
+3. Use `design_system`; on first use, ask before changing it to match an existing codebase system.
 4. Choose the CSS root and file split from project conventions, using the example split only when it helps.
 5. Generate in dependency order: primitive tokens, semantic themes, base/global styles, then component CSS.
 6. Report files written, selected design system, selected themes, and whether preview was skipped or generated.
