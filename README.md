@@ -4,6 +4,12 @@ English | [한국어](README.ko.md) | [简体中文](README.zh-CN.md) | [日本�
 
 Development-focused skills for AI coding agents.
 
+## Installation
+
+```sh
+npx skills add ujon/skills
+```
+
 ## Common
 
 Skills commonly used across projects.

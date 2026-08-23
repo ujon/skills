@@ -4,6 +4,12 @@
 
 面向 AI 编程代理的开发技能集合。
 
+## 安装
+
+```sh
+npx skills add ujon/skills
+```
+
 ## 通用
 
 跨项目常用的技能。
