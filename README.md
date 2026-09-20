@@ -17,6 +17,7 @@ Skills commonly used across projects.
 | Skill | Description |
 | --- | --- |
 | [commit-message](skills/commit-message/README.md) | Format Git commit messages consistently. |
+| [interview](skills/interview/README.md) | Develop intent into precise requirements and a task hierarchy through adaptive, in-depth interviews. |
 
 ## Frontend
 

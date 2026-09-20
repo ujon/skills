@@ -17,6 +17,7 @@ npx skills add ujon/skills
 | 技能 | 说明 |
 | --- | --- |
 | [commit-message](skills/commit-message/README.md) | 按统一格式编写 Git 提交消息。 |
+| [interview](skills/interview/README.md) | 根据回答逐步深入访谈，挖掘意图与约束，将模糊诉求转化为明确的需求规格和层次化任务结构。 |
 
 ## 前端
 

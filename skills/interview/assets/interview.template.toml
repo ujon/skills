@@ -1,0 +1,155 @@
+# Use this template for interview.toml only when no state file exists.
+# Replace the example task, graph, and criteria before the first evaluation.
+# Preserve user requests and answers faithfully, including their uncertainty.
+schema_version = 1
+evaluations = []
+questions = []
+attempts = []
+changes = []
+
+[session]
+id = "interview-001"
+revision = 1
+criteria_version = 1
+round = 0
+status = "interviewing"
+
+[request]
+text = "Make a small website for my shop."
+root_task_id = "t0"
+goal = "Create a small website for the shop."
+scope = []
+out_of_scope = []
+success = ""
+
+[gate]
+overall_threshold = 90
+leaf_threshold = 80
+
+[user]
+# Preferred conversation language for this example.
+language = "en"
+explanation_level = 1
+preferred_style = "Short, everyday words and concrete examples."
+
+[[user.topics]]
+name = "websites"
+familiarity = "unknown"
+confidence = "low"
+evidence_ids = []
+
+# Every depth uses the same tasks table. Only the root omits parent_id.
+[[tasks]]
+id = "t0"
+title = "Create the shop website"
+status = "pending"
+requirement_ids = ["r1"]
+depends_on = []
+
+[[tasks]]
+id = "s1"
+parent_id = "t0"
+title = "Build the shop introduction page"
+status = "pending"
+requirement_ids = ["r1"]
+depends_on = []
+# This is a group because other tasks name it as their parent.
+# Store group status too, keeping it synchronized with descendant progress.
+
+[[tasks]]
+id = "s1-content"
+parent_id = "s1"
+title = "Prepare the shop page content"
+requirement_ids = ["r1"]
+inputs = ["The agreed customer information and its source material"]
+deliverable = "Prepared customer information for the shop page"
+done_when = []
+verification = ""
+depends_on = []
+status = "pending"
+
+[[tasks]]
+id = "s1-page"
+parent_id = "s1"
+title = "Create the page using the prepared content"
+requirement_ids = ["r1"]
+inputs = ["s1-content: prepared shop information", "The agreed page format"]
+deliverable = "A shop page presenting the agreed customer information"
+done_when = []
+verification = ""
+depends_on = ["s1-content"]
+status = "pending"
+
+[[tasks]]
+id = "s2"
+parent_id = "t0"
+title = "Check the agreed visitor journey"
+requirement_ids = ["r1"]
+inputs = ["s1: the shop page", "The agreed visitor actions and expected results"]
+deliverable = "A recorded check of the page's agreed behavior"
+done_when = ["Each agreed page check has a recorded outcome, with any failures identified."]
+verification = "Open the page, try each agreed visitor action, and compare its result with the expected behavior."
+depends_on = ["s1"]
+# Wait for every leaf in s1, independently of s2's parent relationship.
+status = "pending"
+
+[[requirements]]
+id = "r1"
+description = "Create a small website for the shop."
+kind = "outcome"
+evidence_ids = ["e1"]
+
+[[evidence]]
+id = "e1"
+kind = "user"
+text = "Make a small website for my shop."
+source = "Initial user request"
+accepted = true
+status = "active"
+
+[[evidence]]
+id = "e2"
+kind = "assumption"
+text = "A single page will be enough."
+source = "Coordinator inference, not confirmed by the user"
+accepted = false
+status = "active"
+
+[[decisions]]
+id = "d1"
+question = "What should customers be able to find on the page?"
+status = "open"
+value = ""
+required = true
+task_ids = ["t0"]
+evidence_ids = []
+
+[[criteria]]
+id = "c1"
+description = "The page's required content is clear."
+check = "State exactly which information customers must be able to find on this page."
+task_ids = ["s1"]
+weight = 3
+required = true
+evidence_ids = ["e1"]
+decision_ids = ["d1"]
+
+[[criteria]]
+id = "c2"
+description = "A visible completion check is defined."
+check = "List the visitor actions and expected results that the separate verification task will check."
+task_ids = ["t0"]
+weight = 2
+required = true
+evidence_ids = []
+decision_ids = []
+
+[[criteria]]
+id = "c3"
+description = "The delivery boundary is clear."
+check = "State whether delivery ends with local files or includes making the website publicly accessible."
+task_ids = ["t0"]
+weight = 2
+required = true
+evidence_ids = []
+decision_ids = []

@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1120" viewBox="0 0 1200 1120" role="img" aria-labelledby="title desc">
+  <title id="title">From a request to executable work</title>
+  <desc id="desc">Requested outcomes and constraints map to requirements, subtasks, and completion checks. Accepted evidence and decisions inform task-specific readiness criteria. Criteria cover subtask inputs and choices, while unresolved gaps lead to inspection, a question, an experiment, or graph repair. Every connector is straight or has at most two right-angle bends.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <polygon points="0,0 10,5 0,10" fill="#536477"/>
+    </marker>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; fill: #243447; font-size: 18px; text-anchor: middle; }
+      .node { fill: #f7f9fc; stroke: #7b8b9d; stroke-width: 1.5; }
+      .requirement { fill: #edf3fa; stroke: #7b96b3; }
+      .subtask { fill: #eef6f0; stroke: #7c9b86; }
+      .criteria { fill: #faf5e9; stroke: #aa9771; }
+      .edge { fill: none; stroke: #536477; stroke-width: 1.75; stroke-linejoin: miter; stroke-linecap: butt; marker-end: url(#arrow); }
+      .label { font-size: 15px; fill: #526173; }
+      .small { font-size: 16px; }
+    </style>
+  </defs>
+  <rect width="1200" height="1120" fill="#ffffff"/>
+
+  <g aria-label="Connections">
+    <polyline class="edge" data-source="T" data-target="R1" points="550,100 550,130 310,130 310,160"/>
+    <polyline class="edge" data-source="T" data-target="R2" points="650,100 650,130 890,130 890,160"/>
+    <polyline class="edge" data-source="R1" data-target="S1" points="310,240 310,315"/>
+    <polyline class="edge" data-source="R2" data-target="S2" points="890,240 890,315"/>
+    <polyline class="edge" data-source="S1" data-target="S2" points="460,357 740,357"/>
+    <polyline class="edge" data-source="S1" data-target="V1" points="310,399 310,470"/>
+    <polyline class="edge" data-source="S2" data-target="V2" points="890,399 890,470"/>
+    <polyline class="edge" data-source="E" data-target="C" points="320,688 460,688"/>
+    <polyline class="edge" data-source="C" data-target="S1" points="540,650 540,430 400,430 400,399"/>
+    <polyline class="edge" data-source="C" data-target="S2" points="660,650 660,430 800,430 800,399"/>
+    <polyline class="edge" data-source="C" data-target="G" points="600,726 600,790"/>
+    <polyline class="edge" data-source="G" data-target="I" points="550,893.158 550,965 150,965 150,1020"/>
+    <polyline class="edge" data-source="G" data-target="Q" points="580,915.263 580,995 450,995 450,1020"/>
+    <polyline class="edge" data-source="G" data-target="EX" points="620,915.263 620,995 750,995 750,1020"/>
+    <polyline class="edge" data-source="G" data-target="FIX" points="650,893.158 650,965 1050,965 1050,1020"/>
+  </g>
+
+  <g aria-label="Connection labels">
+    <text class="label" x="600" y="344">page handoff</text>
+    <text class="label" x="518" y="585" style="text-anchor:end"><tspan x="518">covers inputs</tspan><tspan x="518" dy="20">and choices</tspan></text>
+    <text class="label" x="682" y="585" style="text-anchor:start"><tspan x="682">covers inputs</tspan><tspan x="682" dy="20">and choices</tspan></text>
+    <text class="label" x="685" y="760">unresolved gap</text>
+  </g>
+
+  <g id="T" data-node="T">
+    <rect class="node" x="440" y="24" width="320" height="76"/>
+    <text x="600" y="56"><tspan x="600">Requested outcomes</tspan><tspan x="600" dy="24">and constraints</tspan></text>
+  </g>
+  <g id="R1" data-node="R1">
+    <rect class="node requirement" x="160" y="160" width="300" height="80"/>
+    <text x="310" y="193"><tspan x="310">Requirement:</tspan><tspan x="310" dy="24">show shop details</tspan></text>
+  </g>
+  <g id="R2" data-node="R2">
+    <rect class="node requirement" x="740" y="160" width="300" height="80"/>
+    <text x="890" y="193"><tspan x="890">Requirement:</tspan><tspan x="890" dy="24">visitors can send a message</tspan></text>
+  </g>
+  <g id="S1" data-node="S1">
+    <rect class="node subtask" x="160" y="315" width="300" height="84"/>
+    <text x="310" y="351"><tspan x="310">Subtask:</tspan><tspan x="310" dy="24">create shop details page</tspan></text>
+  </g>
+  <g id="S2" data-node="S2">
+    <rect class="node subtask" x="740" y="315" width="300" height="84"/>
+    <text x="890" y="351"><tspan x="890">Subtask: add message</tspan><tspan x="890" dy="24">form to shop page</tspan></text>
+  </g>
+  <g id="V1" data-node="V1">
+    <rect class="node" x="150" y="470" width="320" height="86"/>
+    <text class="small" x="310" y="507"><tspan x="310">Done: agreed details visible;</tspan><tspan x="310" dy="24">check rendered page</tspan></text>
+  </g>
+  <g id="V2" data-node="V2">
+    <rect class="node" x="730" y="470" width="320" height="86"/>
+    <text class="small" x="890" y="495"><tspan x="890">Done: message reaches</tspan><tspan x="890" dy="22">agreed destination;</tspan><tspan x="890" dy="22">check delivery</tspan></text>
+  </g>
+  <g id="E" data-node="E">
+    <rect class="node" x="40" y="650" width="280" height="76"/>
+    <text x="180" y="682"><tspan x="180">Accepted evidence</tspan><tspan x="180" dy="24">and decisions</tspan></text>
+  </g>
+  <g id="C" data-node="C">
+    <rect class="node criteria" x="460" y="650" width="280" height="76"/>
+    <text x="600" y="682"><tspan x="600">Task-specific</tspan><tspan x="600" dy="24">readiness criteria</tspan></text>
+  </g>
+  <g id="G" data-node="G">
+    <polygon class="node criteria" points="600,790 695,860 600,930 505,860"/>
+    <text x="600" y="866">Resolve by</text>
+  </g>
+  <g id="I" data-node="I">
+    <rect class="node" x="35" y="1020" width="230" height="72"/>
+    <text x="150" y="1062">Inspect a fact</text>
+  </g>
+  <g id="Q" data-node="Q">
+    <rect class="node" x="335" y="1020" width="230" height="72"/>
+    <text x="450" y="1062">Ask about a choice</text>
+  </g>
+  <g id="EX" data-node="EX">
+    <rect class="node" x="635" y="1020" width="230" height="72"/>
+    <text x="750" y="1062">Bounded experiment</text>
+  </g>
+  <g id="FIX" data-node="FIX">
+    <rect class="node" x="935" y="1020" width="230" height="72"/>
+    <text x="1050" y="1049"><tspan x="1050">Repair graph</tspan><tspan x="1050" dy="24">or criteria</tspan></text>
+  </g>
+</svg>

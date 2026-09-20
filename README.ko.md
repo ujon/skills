@@ -17,6 +17,7 @@ npx skills add ujon/skills
 | 스킬 | 설명 |
 | --- | --- |
 | [commit-message](skills/commit-message/README.md) | Git 커밋 메시지를 일관된 형식으로 작성합니다. |
+| [interview](skills/interview/README.md) | 답변에 따라 심화하는 인터뷰로 요청의 의도와 제약을 도출하고, 모호한 요구를 명확한 명세와 계층적 작업 구조로 구체화합니다. |
 
 ## 프론트엔드
 

@@ -17,6 +17,7 @@ npx skills add ujon/skills
 | スキル | 説明 |
 | --- | --- |
 | [commit-message](skills/commit-message/README.md) | Git コミットメッセージを一貫した形式で作成します。 |
+| [interview](skills/interview/README.md) | 回答に応じて掘り下げる対話を通じて意図と制約を引き出し、曖昧な要望を明確な仕様と階層的なタスク構造へ具体化します。 |
 
 ## フロントエンド
 

@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Interview · Task map</title>
+<style>
+:root {
+ color-scheme: light;
+ --bg: #f3f5f8; --ink: #20242c; --muted: #6e7684;
+ --glass: rgba(255,255,255,.48); --solid: #f7f9fc;
+ --line: rgba(98,114,137,.14); --rim: rgba(255,255,255,.86);
+ --edge: #9baaba; --accent: #007aff; --accent-soft: rgba(0,122,255,.09);
+ --amber: #95621d; --amber-soft: rgba(197,148,70,.09); --green: #258266;
+ --shadow: 0 8px 32px rgba(33,52,83,.065), 0 1px 3px rgba(33,52,83,.04), inset 0 1px 0 var(--rim), inset 0 -1px 0 rgba(255,255,255,.3);
+ --dot: rgba(98,119,145,.13); --card: rgba(255,255,255,.9);
+ --focus: #007aff; --danger: #b84250;
+}
+:root[data-theme=dark] {
+ color-scheme: dark;
+ --bg: #11151c; --ink: #eff2f7; --muted: #9aa7b9;
+ --glass: rgba(39,47,61,.56); --solid: #202733;
+ --line: rgba(176,194,221,.13); --rim: rgba(255,255,255,.18);
+ --edge: #60768f; --accent: #73b6ff; --accent-soft: rgba(100,176,255,.13);
+ --amber: #ddbc84; --amber-soft: rgba(205,158,87,.1); --green: #82ceb1;
+ --shadow: 0 12px 38px rgba(0,0,0,.2), 0 1px 3px rgba(0,0,0,.1), inset 0 1px 0 var(--rim), inset 0 -1px 0 rgba(255,255,255,.035);
+ --dot: rgba(157,181,213,.12); --card: rgba(36,44,57,.94);
+ --focus: #91c6ff; --danger: #f59ca9;
+}
+* { box-sizing: border-box }
+body { margin:0; color:var(--ink); background:var(--bg); font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; overflow:hidden; -webkit-font-smoothing:antialiased }
+body::before { content:""; position:fixed; inset:0; pointer-events:none; background:radial-gradient(ellipse at 1% 0%,rgba(184,213,246,.3),transparent 43%),radial-gradient(ellipse at 96% 15%,rgba(204,209,230,.21),transparent 42%),radial-gradient(ellipse at 40% 105%,rgba(192,220,220,.18),transparent 45%) }
+:root[data-theme=dark] body::before { opacity:.3 }
+button,input { font:inherit; color:inherit }
+button { cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent }
+button:disabled { opacity:.4; cursor:default }
+button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible,[tabindex]:focus-visible { outline:3px solid var(--focus); outline-offset:4px }
+svg.icon { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.65; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0 }
+.glass { background:linear-gradient(145deg,rgba(255,255,255,.12),transparent 65%),var(--glass); border:1px solid var(--rim); box-shadow:var(--shadow); backdrop-filter:blur(28px) saturate(160%); -webkit-backdrop-filter:blur(28px) saturate(160%) }
+.app { position:relative; height:100dvh; min-height:480px; padding:28px 36px 22px; display:flex; flex-direction:column; gap:28px }
+.header { display:flex; align-items:center; justify-content:space-between; gap:20px; min-height:46px }
+.brand { display:flex; align-items:center; gap:12px }
+.brand-mark { width:44px; height:44px; border-radius:16px; display:grid; place-items:center; color:var(--accent) }
+.brand-mark .icon { width:23px; height:23px }
+.brand-name { font-size:19px; letter-spacing:-.6px; font-weight:650 }
+.eyebrow { color:var(--muted); font-size:11px; font-weight:500; letter-spacing:.1px }
+.header-actions { display:flex; align-items:center; gap:18px }
+.source { color:var(--muted); font-size:12px; max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.segmented { display:flex; align-items:center; padding:5px; border-radius:999px; gap:2px }
+.segmented button { border:0; background:transparent; min-height:38px; padding:9px 19px; border-radius:999px; color:var(--muted); font-weight:550; font-size:13px; white-space:nowrap; transition:background .18s,color .18s,box-shadow .18s }
+.segmented button[aria-pressed=true] { background:var(--card); color:var(--ink); box-shadow:0 2px 9px rgba(30,50,90,.08),inset 0 1px 0 var(--rim) }
+.themes button { width:38px; padding:8px; display:grid; place-items:center }
+.themes .icon { width:18px; height:18px }
+.intro { display:flex; justify-content:space-between; align-items:center; gap:40px; padding:0 4px }
+.intro-copy { min-width:0; flex:1 }
+h1 { font-size:clamp(25px,2.5vw,36px); font-weight:620; letter-spacing:-1.25px; line-height:1.2; margin:0 0 12px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow-wrap:anywhere }
+.subtitle { color:var(--muted); font-size:12px; margin:0; line-height:2 }
+.gate-badge { margin-left:10px; border:0; background:var(--amber-soft); color:var(--amber); border-radius:999px; padding:4px 10px; font-size:11px }
+.gate-badge[data-passed=true] { background:var(--accent-soft); color:var(--green) }
+.metrics { display:flex; gap:27px; flex-shrink:0; align-items:center }
+.metric { min-width:82px; padding:0 0 0 25px; border-left:1px solid var(--line) }
+.metric strong { font-size:27px; font-weight:550; letter-spacing:-.9px; display:block; line-height:1.3; font-variant-numeric:tabular-nums }
+.metric small { color:var(--muted); font-size:11px; white-space:nowrap }
+.layout { display:grid; grid-template-columns:minmax(0,1fr); gap:0; flex:1; min-height:0; position:relative }
+.layout.details-open { grid-template-columns:minmax(0,1fr) 344px; gap:24px }
+.map-panel { min-width:0; min-height:0; position:relative }
+.toolbar { position:absolute; top:0; left:0; right:0; z-index:3; display:flex; align-items:center; justify-content:space-between; gap:20px; pointer-events:none }
+.toolbar > * { pointer-events:auto }
+.toolbar-actions { display:flex; align-items:center; gap:12px; min-width:0 }
+.search-wrap { display:flex; align-items:center; gap:9px; min-width:0; width:224px; color:var(--muted); position:relative; padding:0 16px; height:50px; border-radius:999px }
+.search-wrap input { min-width:0; width:100%; background:transparent; border:0; padding:10px 0; font-size:13px }
+.search-wrap input:focus-visible { outline-offset:1px; border-radius:6px }
+.search-wrap input::placeholder { color:var(--muted) }
+.search-count { font-size:10px; white-space:nowrap }
+#search-icon { display:flex }
+.viewport { position:absolute; inset:0; min-height:160px; overflow:hidden; touch-action:none; cursor:grab; background-image:radial-gradient(var(--dot) .8px,transparent .8px); background-size:28px 28px; background-position:center; isolation:isolate; border-radius:18px }
+.viewport.dragging { cursor:grabbing }
+.world { position:absolute; top:0; left:0; transform-origin:0 0; will-change:transform }
+.connections { position:absolute; overflow:visible; pointer-events:none }
+.edge { fill:none; stroke:var(--edge); stroke-width:1.35; stroke-linejoin:miter; vector-effect:non-scaling-stroke; opacity:.65 }
+.edge.dependency { stroke:var(--amber); stroke-dasharray:6 4 }
+.edge.active { stroke:var(--accent); stroke-width:1.8; opacity:.8 }
+.node { position:absolute; width:258px; height:136px; appearance:none; display:flex; flex-direction:column; text-align:left; padding:18px 20px; border:1px solid var(--line); border-radius:23px; background:var(--card); box-shadow:0 6px 20px rgba(33,52,83,.04),0 1px 3px rgba(33,52,83,.025); transition:box-shadow .18s,border-color .18s,opacity .18s; overflow:hidden }
+.node:hover { border-color:var(--edge); box-shadow:0 10px 30px rgba(33,52,83,.1) }
+.node.selected { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft),0 8px 28px rgba(0,122,255,.07) }
+.node.dimmed { opacity:.22 }
+.node-top { display:flex; justify-content:space-between; align-items:center; gap:10px; color:var(--muted); font-size:10px; line-height:1.3; margin-bottom:9px }
+.node-kind { display:flex; align-items:center; gap:5px; letter-spacing:.2px }
+.node-kind .icon { width:13px; height:13px }
+.node-id { max-width:90px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis }
+.node-title { font-size:14px; line-height:1.38; font-weight:600; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; overflow-wrap:anywhere; flex:1 }
+.node-bottom { display:flex; justify-content:space-between; align-items:center; margin-top:8px; gap:8px; font-size:10px; color:var(--muted) }
+.status-dot { display:inline-block; width:5px; height:5px; border-radius:50%; margin-right:5px; background:var(--muted) }
+.status-dot.done { background:var(--green) }.status-dot.running { background:var(--amber) }
+.node-score { color:var(--accent); font-variant-numeric:tabular-nums }
+.map-footer { position:absolute; bottom:5px; left:0; right:0; display:flex; justify-content:center; align-items:center; pointer-events:none; gap:10px; z-index:3 }
+.map-caption { position:absolute; left:4px; font-size:11px; color:var(--muted); max-width:calc(50% - 150px); line-height:1.8; white-space:pre-line }
+.zoom-controls { display:flex; align-items:center; padding:6px; border-radius:999px; gap:3px; pointer-events:auto }
+.icon-button { border:0; background:transparent; border-radius:50%; display:grid; place-items:center; width:38px; height:38px; transition:background .18s,color .18s }
+.icon-button:hover { background:var(--accent-soft) }
+.inspector-toggle { width:50px; height:50px; flex-shrink:0; border-radius:50%; display:grid; place-items:center }
+.inspector-toggle[aria-expanded=true] { color:var(--accent) }
+.zoom-value { font-size:12px; min-width:46px; text-align:center; color:var(--muted); font-variant-numeric:tabular-nums }
+.divider { width:1px; height:16px; background:var(--line); margin:0 3px }
+.zoom-reset { width:38px; font-size:11px; font-weight:550 }
+.detail { border-radius:30px; overflow:hidden; display:none; flex-direction:column; min-height:0; margin:0 0 4px }
+.detail.open { display:flex }
+.detail-heading { padding:16px 17px 0; display:flex; align-items:center; justify-content:space-between; gap:8px }
+.detail-scroll { padding:24px; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; flex:1 }
+.detail-title { font-size:25px; font-weight:600; letter-spacing:-.7px; line-height:1.25; overflow-wrap:anywhere; margin:10px 0 16px }
+.detail-id { font-size:11px; color:var(--muted); overflow-wrap:anywhere }
+.chips { display:flex; flex-wrap:wrap; gap:7px }
+.chip { border:0; border-radius:10px; padding:6px 9px; color:var(--muted); font-size:11px; background:var(--accent-soft); overflow-wrap:anywhere; max-width:100% }
+button.chip:hover { color:var(--accent) }
+.section { margin-top:29px }
+.section h3 { font-size:12px; color:var(--muted); font-weight:550; margin:0 0 11px }
+.section p,.section li { font-size:13px; line-height:1.7; margin:0 0 8px; overflow-wrap:anywhere }
+.section ul { margin:0; padding-left:17px }.muted { color:var(--muted) }
+.item { border:0; padding:14px 0; border-bottom:1px solid var(--line); margin:0 }
+.item:last-child { border-bottom:0 }
+.item-head { display:flex; gap:8px; align-items:baseline; justify-content:space-between }
+.item strong { font-size:13px; font-weight:600; overflow-wrap:anywhere }
+.item p { font-size:12px; color:var(--muted); margin:8px 0 0 }
+.evidence-details,.record-details { margin-top:12px; font-size:12px; overflow-wrap:anywhere }
+.evidence-details > summary,.record-details > summary { cursor:pointer; color:var(--accent); padding:3px 0 }
+.evidence-card { margin-top:10px; padding:12px; border-radius:14px; background:var(--accent-soft); overflow-wrap:anywhere }
+.evidence-card[data-status=superseded] { background:var(--amber-soft) }
+.evidence-card .evidence-text { color:var(--ink); white-space:pre-wrap }
+.evidence-card .evidence-meta { font-size:10px; margin:5px 0 0 }
+.evidence-source a { color:var(--accent); text-decoration-thickness:1px; text-underline-offset:2px }
+.record-field { margin-top:10px }
+.record-field > .field-label { display:block; font-size:11px; color:var(--muted); margin-bottom:3px }
+.record-field > p { margin:0; white-space:pre-wrap }
+.question-options { margin-top:10px!important }
+.question-options li { font-size:12px }
+.rating { white-space:nowrap; font-size:10px; padding:3px 7px; border-radius:7px; background:var(--accent-soft); color:var(--accent) }
+.rating.low { background:var(--amber-soft); color:var(--amber) }
+.notice { color:var(--muted); background:var(--amber-soft); border-radius:16px; padding:13px 15px; font-size:12px; margin-top:15px; overflow-wrap:anywhere }
+.progress { height:4px; background:var(--line); border-radius:9px; margin:16px 0 5px; overflow:hidden }
+.progress-fill { height:100%; background:var(--accent); border-radius:9px }
+.detail-tabs { display:flex; gap:2px; background:var(--accent-soft); border-radius:999px; padding:4px; flex:1 }
+.detail-tabs button { padding:8px 12px; min-height:36px; border:0; border-radius:999px; background:transparent; color:var(--muted); font-size:12px; font-weight:550; flex:1; white-space:nowrap }
+.detail-tabs button[aria-pressed=true] { color:var(--ink); background:var(--card); box-shadow:0 1px 4px rgba(33,52,83,.04) }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }
+.empty-state { position:absolute; inset:30%; color:var(--muted); text-align:center; pointer-events:none }
+.error { padding:30px; white-space:pre-wrap }
+@media(max-width:1150px) {
+ .app { padding:24px; gap:25px }.layout.details-open { grid-template-columns:minmax(0,1fr) 312px; gap:18px }
+ .intro { gap:24px }.metrics { gap:17px }.metric { padding-left:17px; min-width:72px }.metric strong { font-size:24px }
+ .modes button { padding:9px 14px }.search-wrap { width:180px }.toolbar,.toolbar-actions { gap:10px }
+ .map-caption { display:none }.detail-scroll { padding:21px }
+ .details-open .search-wrap { width:150px }.details-open .modes button { padding:9px 10px; font-size:12px }
+}
+@media(max-width:900px) and (min-width:761px) {
+ .layout.details-open { grid-template-columns:minmax(0,1fr) 290px; gap:14px }
+ .details-open .toolbar { flex-wrap:wrap; gap:10px }.details-open .toolbar-actions { width:100% }.details-open .search-wrap { flex:1 }
+ .intro { align-items:flex-start }.metrics { gap:12px }.metric { padding-left:12px; min-width:60px }.metric:last-child { display:none }
+}
+@media(max-width:760px) {
+ .app { padding:18px 16px 16px; gap:23px; min-height:460px }.header { min-height:42px; gap:12px }
+ .brand { gap:10px }.brand-name { font-size:18px }.brand-mark { width:40px; height:40px; border-radius:14px }.brand .eyebrow { display:none }
+ .source { display:none }.header-actions { gap:0 }.themes { padding:4px }.themes button { width:34px; min-height:34px; padding:8px }.themes .icon { width:17px; height:17px }
+ .intro { flex-direction:column; align-items:stretch; gap:16px; padding:0 4px }.intro h1 { font-size:27px; letter-spacing:-.8px; margin-bottom:8px }
+ .subtitle { font-size:10px }.gate-badge { font-size:10px; margin-left:7px; padding:3px 7px }
+ .metrics { gap:24px; justify-content:flex-start }.metric { min-width:0; padding:0 22px 0 0; border-left:0; border-right:1px solid var(--line) }.metric:last-child { border:0; padding:0 }.metric strong { font-size:22px }.metric small { font-size:10px }
+ .layout,.layout.details-open { display:block }.map-panel { height:100% }.toolbar { flex-wrap:wrap; gap:10px }.modes { padding:4px }.modes button { font-size:12px; padding:9px 15px; min-height:36px }
+ .toolbar-actions { gap:8px; width:100% }.search-wrap,.details-open .search-wrap { flex:1; width:auto; height:44px }.inspector-toggle { width:44px; height:44px }
+ .search-count { display:none }.map-caption { display:none }.map-footer { bottom:0 }.zoom-controls { padding:5px }.icon-button { width:38px; height:38px }.inspector-toggle { width:44px; height:44px }
+ .detail { position:absolute; z-index:8; inset:auto -4px -4px; height:82%; max-height:550px; margin:0; border-radius:28px; background:var(--solid); box-shadow:0 -8px 40px rgba(0,0,0,.12) }
+ .detail-heading { padding:14px 16px 0 }.detail-scroll { padding:20px 23px }.detail-title { font-size:23px }
+}
+@media(max-height:700px) and (max-width:760px) { .app { gap:14px; padding-top:12px }.intro { gap:10px }.intro h1 { font-size:22px }.metrics { display:none }.toolbar { gap:7px }.detail { height:90% } }
+@media(prefers-reduced-motion:reduce) { * { transition:none!important; scroll-behavior:auto!important } }
+@media(prefers-reduced-transparency:reduce) { .glass { background:var(--solid); backdrop-filter:none; -webkit-backdrop-filter:none }.node { background:var(--solid) } }
+@media(prefers-contrast:more) { :root { --muted:#454d59; --line:#838d9c; --edge:#63758a } :root[data-theme=dark] { --muted:#d3dae5; --line:#7e8da2; --edge:#a3b5cd } .glass { background:var(--solid); border-color:var(--line) }.node { border-color:var(--line) } }
+@supports not (backdrop-filter:blur(1px)) { .glass { background:var(--solid) } }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="header">
+    <div class="brand"><div class="brand-mark glass" id="brand-icon"></div><div><div class="brand-name">Interview</div><div class="eyebrow" data-i18n="tagline">A clearer path to done</div></div></div>
+    <div class="header-actions"><span class="source" id="source"></span><div class="themes segmented glass" role="group" data-label="theme"><button type="button" data-theme-choice="light" data-label="light"></button><button type="button" data-theme-choice="dark" data-label="dark"></button><button type="button" data-theme-choice="auto" data-label="auto"></button></div></div>
+  </header>
+  <section class="intro"><div class="intro-copy"><h1 id="goal"></h1><p class="subtitle" id="subtitle"></p></div><div class="metrics"><div class="metric"><strong id="readiness"></strong><small data-i18n="readiness">Readiness</small></div><div class="metric"><strong id="completed"></strong><small data-i18n="completed">Tasks completed</small></div><div class="metric"><strong id="open-decisions"></strong><small data-i18n="decisionsLeft">Open decisions</small></div></div></section>
+  <main class="layout">
+    <section class="map-panel" data-label="taskMap">
+      <div class="toolbar"><div class="segmented modes glass" role="group" data-label="graphMode"><button type="button" data-mode="structure" aria-pressed="true" data-i18n="structure">Structure</button><button type="button" data-mode="dependencies" aria-pressed="false" data-i18n="dependencies">Execution order</button></div><div class="toolbar-actions"><label class="search-wrap glass"><span id="search-icon"></span><span class="sr-only" data-i18n="search">Find a task</span><input id="search" type="search" autocomplete="off" data-placeholder="search"><span class="search-count" id="search-count" aria-live="polite"></span></label><button type="button" class="inspector-toggle glass" id="show-details" data-label="details" aria-controls="detail" aria-expanded="false"></button></div></div>
+      <div class="viewport" id="viewport" tabindex="0" role="region" data-label="canvas" aria-describedby="canvas-help"><div class="world" id="world"></div></div>
+      <div class="map-footer"><div class="map-caption" id="canvas-help"></div><div class="zoom-controls glass" role="group" data-label="zoom"><button type="button" class="icon-button" id="zoom-out" data-label="zoomOut"></button><output class="zoom-value" id="zoom-value" aria-live="polite">100%</output><button type="button" class="icon-button" id="zoom-in" data-label="zoomIn"></button><span class="divider"></span><button type="button" class="icon-button" id="fit" data-label="fit"></button><button type="button" class="icon-button zoom-reset" id="actual-size" data-label="actualSize">1:1</button></div></div>
+    </section>
+    <aside class="detail glass" id="detail" aria-label="Details"><div class="detail-heading"><div class="detail-tabs" role="group" data-label="details"><button type="button" data-tab="task" aria-pressed="true" data-i18n="taskDetails">Task details</button><button type="button" data-tab="interview" aria-pressed="false" data-i18n="interview">Interview</button></div><button type="button" class="icon-button" id="close-details" data-label="close"></button></div><div class="detail-scroll" id="detail-content"></div></aside>
+  </main>
+</div>
+<script id="interview-data" type="application/json">__INTERVIEW_DATA__</script>
+<script>
+'use strict';
+(() => {
+const data = JSON.parse(document.getElementById('interview-data').textContent);
+const words = {
+ tagline: 'A clearer path to done',
+ theme: 'Appearance',
+ light: 'Light theme',
+ dark: 'Dark theme',
+ auto: 'System theme',
+ readiness: 'Readiness',
+ completed: 'Tasks completed',
+ decisionsLeft: 'Open decisions',
+ taskMap: 'Task map',
+ graphMode: 'Graph view',
+ structure: 'Structure',
+ dependencies: 'Execution order',
+ search: 'Find a task',
+ canvas: 'Interactive task graph',
+ zoom: 'Zoom controls',
+ zoomIn: 'Zoom in (+)',
+ zoomOut: 'Zoom out (−)',
+ fit: 'Fit all tasks (0)',
+ actualSize: 'Actual size (1)',
+ details: 'Open details',
+ taskDetails: 'Task details',
+ interview: 'Interview',
+ close: 'Close details',
+ group: 'Group',
+ leaf: 'Task',
+ pending: 'Pending',
+ running: 'In progress',
+ done: 'Completed',
+ notScored: 'Not evaluated',
+ snapshot: 'Saved snapshot',
+ revision: 'Revision',
+ ready: 'Ready to begin',
+ needsAnswers: 'Needs clarification',
+ help: 'Scroll to zoom · drag to move · 0 to fit',
+ nodes: 'tasks',
+ links: 'connections',
+ parent: 'Part of',
+ children: 'Contains',
+ inputs: 'Inputs',
+ deliverable: 'Expected result',
+ checks: 'Done when',
+ verification: 'How to check',
+ requirements: 'Requirements',
+ criteria: 'Readiness checks',
+ decisions: 'Decisions',
+ required: 'Required',
+ optional: 'Optional',
+ unresolved: 'Not decided',
+ resolved: 'Decided',
+ deferred: 'Deferred',
+ before: 'Must finish first',
+ after: 'Unblocks',
+ none: 'None recorded',
+ unknown: 'Not defined yet',
+ groupHint: 'This group is complete when all its tasks are done. Its score counts each readiness check once.',
+ request: 'Original request',
+ success: 'Success looks like',
+ scope: 'In scope',
+ outOfScope: 'Out of scope',
+ blockers: 'What is still needed',
+ questions: 'Questions',
+ profile: 'Explanation preferences',
+ emptyQuestions: 'No questions recorded yet.',
+ noMatch: 'No matches',
+ matches: 'matches',
+ stale: 'There is no evaluation for this revision. Scores stay blank until it is evaluated.',
+ legacy: 'Legacy file · read-only view. Upgrade the state before a new interview round.',
+ snapshotHint: 'This page is a snapshot. Regenerate it after changing the TOML file.',
+ evidence: 'Evidence',
+ answered: 'Answered',
+ skipped: 'Skipped',
+ superseded: 'Superseded',
+ interviewing: 'Interviewing',
+ executing: 'Executing',
+ paused: 'Paused',
+ blocked: 'Blocked',
+ overridden: 'Proceeding with gaps',
+ open: 'Open'
+};
+const t = key => words[key] || key;
+document.documentElement.lang = 'en';
+const $ = selector => document.querySelector(selector);
+const make = (tag,className,text) => { const n=document.createElement(tag); if(className)n.className=className; if(text!==undefined)n.textContent=String(text); return n; };
+const icons = { graph:'M5 5h5v5H5z M15 14h5v5h-5z M4 16h5v5H4z M10 7h7v7 M7 10v6',sun:'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M12 2v2 M12 20v2 M2 12h2 M20 12h2 M5 5l1.5 1.5 M17.5 17.5L19 19 M5 19l1.5-1.5 M17.5 6.5L19 5',moon:'M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z',screen:'M3 4h18v13H3z M8 21h8 M12 17v4',search:'M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14 M15 15l6 6',plus:'M5 12h14 M12 5v14',minus:'M5 12h14',fit:'M4 9V4h5 M15 4h5v5 M20 15v5h-5 M9 20H4v-5',close:'M6 6l12 12 M6 18L18 6',folder:'M3 6h7l2 3h9v11H3z',task:'M6 3h12v18H6z M9 8h6 M9 12h6 M9 16h4',info:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 11v6 M12 7v1'};
+function icon(name){const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.classList.add('icon');svg.setAttribute('aria-hidden','true');const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',icons[name]);svg.append(path);return svg;}
+const i18n = () => {document.querySelectorAll('[data-i18n]').forEach(n=>n.textContent=t(n.dataset.i18n));document.querySelectorAll('[data-label]').forEach(n=>{n.setAttribute('aria-label',t(n.dataset.label));n.title=t(n.dataset.label);});document.querySelectorAll('[data-placeholder]').forEach(n=>n.placeholder=t(n.dataset.placeholder));};
+i18n();$('#brand-icon').append(icon('graph'));$('#search-icon').append(icon('search'));
+for(const [selector,name] of [['#zoom-in','plus'],['#zoom-out','minus'],['#fit','fit'],['#show-details','info'],['#close-details','close']])$(selector).append(icon(name));
+for(const [choice,name] of [['light','sun'],['dark','moon'],['auto','screen']])$(`[data-theme-choice="${choice}"]`).append(icon(name));
+const media=window.matchMedia('(prefers-color-scheme: dark)');let theme=data.initial_theme || 'auto';
+// The generated theme is explicit; remember later selections in this tab only.
+function applyTheme(choice){theme=choice;document.documentElement.dataset.theme=choice==='auto'?(media.matches?'dark':'light'):choice;document.querySelectorAll('[data-theme-choice]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.themeChoice===choice)));}
+document.querySelectorAll('[data-theme-choice]').forEach(b=>b.addEventListener('click',()=>applyTheme(b.dataset.themeChoice)));media.addEventListener('change',()=>{if(theme==='auto')applyTheme('auto');});applyTheme(theme);
+const nodes=new Map(data.nodes.map(n=>[n.id,n]));const leafNodes=data.nodes.filter(n=>n.kind==='leaf');let selected=data.nodes.find(n=>!n.parent_id)?.id || data.nodes[0]?.id;let mode='structure',detailTab='task';
+$('#source').textContent=data.source_name;$('#goal').textContent=data.request.goal||data.request.text;document.title=`${data.request.goal||'Interview'} · Interview`;$('#subtitle').textContent=`${t('snapshot')} · ${t('revision')} ${data.session.revision} · ${t(data.session.status)}`;
+const gateBadge=make('button','gate-badge',t(!data.summary.has_current_evaluation?'notScored':data.summary.passed?'ready':'needsAnswers'));gateBadge.id='gate-status';gateBadge.type='button';gateBadge.dataset.passed=String(data.summary.passed);gateBadge.addEventListener('click',()=>{detailTab='interview';renderDetails();setDetails(true);});$('#subtitle').append(gateBadge);
+$('#readiness').textContent=data.summary.overall_score===null?'—':`${Math.round(data.summary.overall_score)}%`;$('#completed').textContent=`${leafNodes.filter(n=>n.status==='done').length} / ${leafNodes.length}`;
+const allDecisions=new Map(data.nodes.flatMap(n=>(n.decisions||[]).map(d=>[d.id,d])));$('#open-decisions').textContent=[...allDecisions.values()].filter(d=>d.status!=='resolved').length;
+const allCriteria=new Map(data.nodes.flatMap(n=>(n.criteria||[]).map(c=>[c.id,c])));
+const evidenceById=new Map((data.evidence||[]).map(e=>[e.id,e]));
+const descendants=new Map();const todo=data.nodes.map(n=>({id:n.id,count:n.children.length}));const remaining=new Map(todo.map(n=>[n.id,n.count]));const queue=todo.filter(n=>!n.count).map(n=>n.id);
+while(queue.length){const id=queue.pop(),n=nodes.get(id);const leaves=n.children.length?new Set(n.children.flatMap(c=>[...(descendants.get(c)||[])])):new Set([id]);descendants.set(id,leaves);if(n.parent_id&&remaining.has(n.parent_id)){remaining.set(n.parent_id,remaining.get(n.parent_id)-1);if(!remaining.get(n.parent_id))queue.push(n.parent_id);}}
+const dependencyPairs=new Map();for(const edge of data.edges.filter(e=>e.type==='dependency'))for(const a of descendants.get(edge.source)||[])for(const b of descendants.get(edge.target)||[])dependencyPairs.set(JSON.stringify([a,b]),{source:a,target:b,type:'dependency'});
+const dependencies=[...dependencyPairs.values()];
+const W=258,H=136,GX=92,GY=48;let positions=new Map(),visible=[],edges=[],bounds={width:W,height:H};const viewport=$('#viewport'),world=$('#world');let camera={x:0,y:0,scale:1};let fitScale=1,autoFit=true;
+function layoutTree(){const root=data.nodes.find(n=>!n.parent_id);const depth=new Map();const order=[];const stack=root?[{id:root.id,depth:0}]:[];while(stack.length){const item=stack.pop();order.push(item.id);depth.set(item.id,item.depth);const children=nodes.get(item.id).children;for(let i=children.length-1;i>=0;i--)stack.push({id:children[i],depth:item.depth+1});}let row=0;const ranges=new Map();positions=new Map();for(const id of order.filter(id=>!nodes.get(id).children.length)){ranges.set(id,[row,row]);row++;}for(const id of [...order].reverse()){const n=nodes.get(id);if(n.children.length){const rs=n.children.map(c=>ranges.get(c));ranges.set(id,[rs[0][0],rs[rs.length-1][1]]);}const [a,b]=ranges.get(id);positions.set(id,{x:depth.get(id)*(W+GX),y:(a+b)/2*(H+GY)});}visible=order.map(id=>nodes.get(id));edges=data.edges.filter(e=>e.type==='hierarchy');}
+function layoutDependencies(){visible=leafNodes;edges=dependencies;const rank=new Map(visible.map(n=>[n.id,0]));const incoming=new Map(visible.map(n=>[n.id,0]));const next=new Map(visible.map(n=>[n.id,[]]));for(const e of edges){incoming.set(e.target,incoming.get(e.target)+1);next.get(e.source).push(e.target);}const ready=visible.filter(n=>!incoming.get(n.id)).map(n=>n.id);for(let i=0;i<ready.length;i++){const id=ready[i];for(const target of next.get(id)){rank.set(target,Math.max(rank.get(target),rank.get(id)+1));incoming.set(target,incoming.get(target)-1);if(!incoming.get(target))ready.push(target);}}const columns=new Map();for(const n of visible){const r=rank.get(n.id);if(!columns.has(r))columns.set(r,[]);columns.get(r).push(n.id);}const largest=Math.max(1,...[...columns.values()].map(a=>a.length));positions=new Map();for(const [column,ids]of columns)ids.forEach((id,index)=>positions.set(id,{x:column*(W+GX),y:((largest-ids.length)/2+index)*(H+GY)}));
+// Keep compact ranks when clear. Distinct rows provide a deterministic fallback
+// for skip-rank edges: horizontal segments cannot run through another card,
+// and the vertical segment stays in the gap immediately after its source.
+if(edges.some(e=>routeCrossesCard(e))){ready.forEach((id,index)=>positions.set(id,{x:rank.get(id)*(W+GX),y:index*(H+GY)}));}}
+function routePoints(e){const a=positions.get(e.source),b=positions.get(e.target);const x1=a.x+W,y1=a.y+H/2,x2=b.x,y2=b.y+H/2;const mid=e.type==='dependency'?x1+GX/2:(x1+x2)/2;return y1===y2?[[x1,y1],[x2,y2]]:[[x1,y1],[mid,y1],[mid,y2],[x2,y2]];}
+function routeCrossesCard(e){const ps=routePoints(e);return visible.some(n=>{if(n.id===e.source||n.id===e.target)return false;const p=positions.get(n.id);return ps.slice(1).some((b,i)=>{const a=ps[i];return a[0]===b[0]?a[0]>p.x&&a[0]<p.x+W&&Math.max(a[1],b[1])>p.y&&Math.min(a[1],b[1])<p.y+H:a[1]>p.y&&a[1]<p.y+H&&Math.max(a[0],b[0])>p.x&&Math.min(a[0],b[0])<p.x+W;});});}
+function svgNode(tag,attrs){const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v]of Object.entries(attrs))n.setAttribute(k,String(v));return n;}
+function draw(){if(mode==='structure')layoutTree();else layoutDependencies();world.replaceChildren();bounds={width:Math.max(W,...[...positions.values()].map(p=>p.x+W)),height:Math.max(H,...[...positions.values()].map(p=>p.y+H))};world.style.width=`${bounds.width}px`;world.style.height=`${bounds.height}px`;const svg=svgNode('svg',{width:bounds.width,height:bounds.height,'aria-hidden':'true',class:'connections'});const defs=svgNode('defs',{});for(const kind of ['hierarchy','dependency']){const marker=svgNode('marker',{id:`arrow-${kind}`,viewBox:'0 0 10 10',refX:10,refY:5,markerWidth:7,markerHeight:7,orient:'auto'});marker.append(svgNode('polygon',{points:'0,0 10,5 0,10',fill:kind==='dependency'?'var(--amber)':'var(--edge)'}));defs.append(marker);}svg.append(defs);for(const e of edges){const a=positions.get(e.source),b=positions.get(e.target);if(!a||!b)continue;const line=svgNode('polyline',{points:routePoints(e).map(p=>p.join(',')).join(' '),class:`edge ${e.type}`,'marker-end':`url(#arrow-${e.type})`});line.dataset.source=e.source;line.dataset.target=e.target;svg.append(line);}world.append(svg);
+for(const n of visible){const p=positions.get(n.id),button=make('button','node');button.type='button';button.dataset.id=n.id;button.style.left=`${p.x}px`;button.style.top=`${p.y}px`;button.setAttribute('aria-label',`${n.title} · ${t(n.status)}`);button.setAttribute('aria-pressed',String(n.id===selected));const top=make('span','node-top'),kind=make('span','node-kind',t(n.kind));kind.prepend(icon(n.kind==='group'?'folder':'task'));top.append(kind,make('span','node-id',n.id));const bottom=make('span','node-bottom'),status=make('span','',t(n.status));status.prepend(make('span',`status-dot ${n.status}`));bottom.append(status,make('span','node-score',n.score===null?t('notScored'):`${Math.round(n.score)}%`));button.append(top,make('span','node-title',n.title),bottom);button.addEventListener('click',e=>{if(e.detail===0)select(n.id);});world.append(button);}
+$('#canvas-help').textContent=`${visible.length} ${t('nodes')} · ${edges.length} ${t('links')}\n${t('help')}`;updateSelection();search(false);fit();}
+function applyCamera(){world.style.transform=`translate(${camera.x}px, ${camera.y}px) scale(${camera.scale})`;world.dataset.scale=String(camera.scale);$('#zoom-value').textContent=`${camera.scale<.1?(camera.scale*100).toFixed(1):Math.round(camera.scale*100)}%`;$('#zoom-in').disabled=camera.scale>=4;$('#zoom-out').disabled=camera.scale<=Math.min(.1,fitScale);}
+function zoomAt(scale,x=usableArea().cx,y=usableArea().cy){autoFit=false;scale=Math.max(Math.min(.1,fitScale),Math.min(4,scale));const ratio=scale/camera.scale;camera.x=x-(x-camera.x)*ratio;camera.y=y-(y-camera.y)*ratio;camera.scale=scale;applyCamera();}
+// Keep fitted content clear of the floating controls. Pointer zoom keeps its own anchor.
+function usableArea(){
+ const r=viewport.getBoundingClientRect(),toolbar=$('.toolbar').getBoundingClientRect(),footer=$('.map-footer').getBoundingClientRect();
+ const left=24,right=24,top=Math.max(24,toolbar.bottom-r.top+24),bottom=Math.max(24,r.bottom-footer.top+24);
+ const width=Math.max(1,r.width-left-right),height=Math.max(1,r.height-top-bottom);
+ return {left,top,width,height,cx:left+width/2,cy:top+height/2};
+}
+function fit(){const area=usableArea();if(!viewport.clientWidth||!viewport.clientHeight)return;autoFit=true;fitScale=Math.max(.001,Math.min(1,area.width/bounds.width,area.height/bounds.height));camera={scale:fitScale,x:area.cx-bounds.width*fitScale/2,y:area.cy-bounds.height*fitScale/2};applyCamera();}
+function center(id){const p=positions.get(id);if(!p)return;autoFit=false;const area=usableArea();camera.x=area.cx-(p.x+W/2)*camera.scale;camera.y=area.cy-(p.y+H/2)*camera.scale;applyCamera();}
+function setDetails(open,restoreFocus=false){
+ const panel=$('#detail');panel.classList.toggle('open',open);$('.layout').classList.toggle('details-open',open);
+ const toggle=$('#show-details');toggle.setAttribute('aria-expanded',String(open));
+ toggle.setAttribute('aria-label',t(open?'close':'details'));toggle.title=t(open?'close':'details');
+ if(!open&&restoreFocus)$('#show-details').focus({preventScroll:true});
+}
+$('#zoom-in').addEventListener('click',()=>zoomAt(camera.scale*1.25));$('#zoom-out').addEventListener('click',()=>zoomAt(camera.scale/1.25));$('#fit').addEventListener('click',fit);$('#actual-size').addEventListener('click',()=>zoomAt(1));
+viewport.addEventListener('wheel',e=>{e.preventDefault();const r=viewport.getBoundingClientRect();const delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?viewport.clientHeight:1);zoomAt(camera.scale*Math.exp(-Math.max(-300,Math.min(300,delta))*.002),e.clientX-r.left,e.clientY-r.top);},{passive:false});
+const pointers=new Map();let down=null,moved=false;const local=e=>{const r=viewport.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};};
+function pair(){const [a,b]=[...pointers.values()];return{center:{x:(a.x+b.x)/2,y:(a.y+b.y)/2},distance:Math.hypot(a.x-b.x,a.y-b.y)};}
+viewport.addEventListener('pointerdown',e=>{if(e.button!==0&&e.pointerType==='mouse')return;const p=local(e);pointers.set(e.pointerId,p);viewport.setPointerCapture(e.pointerId);if(pointers.size===1){down={...p,id:e.target.closest('.node')?.dataset.id};moved=false;}else moved=true;viewport.classList.add('dragging');});
+viewport.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;const p=local(e);if(pointers.size===2){const old=pair();pointers.set(e.pointerId,p);const now=pair();if(old.distance>0){zoomAt(camera.scale*now.distance/old.distance,old.center.x,old.center.y);camera.x+=now.center.x-old.center.x;camera.y+=now.center.y-old.center.y;applyCamera();}moved=true;}else{const prev=pointers.get(e.pointerId);pointers.set(e.pointerId,p);if(down&&Math.hypot(p.x-down.x,p.y-down.y)>5)moved=true;if(moved){autoFit=false;camera.x+=p.x-prev.x;camera.y+=p.y-prev.y;applyCamera();}}});
+function endPointer(e){if(!pointers.has(e.pointerId))return;const click=e.type==='pointerup'&&!moved&&pointers.size===1&&down?.id;pointers.delete(e.pointerId);if(click)select(down.id);if(!pointers.size){down=null;viewport.classList.remove('dragging');}else moved=true;}
+viewport.addEventListener('pointerup',endPointer);viewport.addEventListener('pointercancel',endPointer);viewport.addEventListener('lostpointercapture',endPointer);
+viewport.addEventListener('keydown',e=>{if(e.target.closest('input'))return;let handled=true;if(e.key==='+'||e.key==='=')zoomAt(camera.scale*1.25);else if(e.key==='-')zoomAt(camera.scale/1.25);else if(e.key==='0'||e.key==='Home')fit();else if(e.key==='1')zoomAt(1);else if(e.key==='ArrowLeft')camera.x+=45;else if(e.key==='ArrowRight')camera.x-=45;else if(e.key==='ArrowUp')camera.y+=45;else if(e.key==='ArrowDown')camera.y-=45;else handled=false;if(handled){if(e.key.startsWith('Arrow'))autoFit=false;e.preventDefault();applyCamera();}});
+let lastArea=null;new ResizeObserver(()=>{
+ const area=usableArea();fitScale=Math.max(.001,Math.min(1,area.width/bounds.width,area.height/bounds.height));
+ if(autoFit)fit();else if(lastArea){camera.x+=area.cx-lastArea.cx;camera.y+=area.cy-lastArea.cy;applyCamera();}
+ lastArea=area;
+}).observe(viewport);
+function updateSelection(){world.querySelectorAll('.node').forEach(n=>{n.classList.toggle('selected',n.dataset.id===selected);n.setAttribute('aria-pressed',String(n.dataset.id===selected));});world.querySelectorAll('.edge').forEach(e=>e.classList.toggle('active',e.dataset.source===selected||e.dataset.target===selected));}
+function select(id,recenter=false){if(!nodes.has(id))return;selected=id;if(!positions.has(id)){mode='structure';updateMode();draw();}updateSelection();detailTab='task';renderDetails();setDetails(true);if(recenter)requestAnimationFrame(()=>{center(id);lastArea=usableArea();});}
+function updateMode(){document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));}
+document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;updateMode();draw();}));
+function search(){const term=$('#search').value.trim().toLocaleLowerCase();let count=0;world.querySelectorAll('.node').forEach(el=>{const n=nodes.get(el.dataset.id),match=!term||`${n.id} ${n.title}`.toLocaleLowerCase().includes(term);el.classList.toggle('dimmed',!match);if(match)count++;});$('#search-count').textContent=term?(count?`${count} ${t('matches')}`:t('noMatch')):'';return visible.filter(n=>`${n.id} ${n.title}`.toLocaleLowerCase().includes(term));}
+$('#search').addEventListener('input',search);$('#search').addEventListener('keydown',e=>{if(e.key==='Enter'){const matches=search();if(matches[0])select(matches[0].id,true);}if(e.key==='Escape'){$('#search').value='';search();}});
+const detail=$('#detail-content');
+function section(label,text){const s=make('section','section');s.append(make('h3','',t(label)));if(Array.isArray(text)){const ul=make('ul');for(const item of text)ul.append(make('li','',item));s.append(text.length?ul:make('p','muted',t('unknown')));}else if(text!==undefined)s.append(make('p',text?'':'muted',text||t('unknown')));detail.append(s);return s;}
+function taskLinks(label,ids){if(!ids.length)return;const s=section(label),chips=make('div','chips');for(const id of ids){const n=nodes.get(id);if(!n)continue;const b=make('button','chip',n.title);b.type='button';b.addEventListener('click',()=>select(id,true));chips.append(b);}s.append(chips);}
+function recordField(parent,label,value){if(value===undefined||value==='')return;const field=make('div','record-field');field.append(make('span','field-label',label),make('p','',value));parent.append(field);}
+// Sources are authored prose, paths, or URLs. Only a complete web URL is a link;
+// every visible value uses textContent, including the link's original label.
+function sourceUrl(source){if(typeof source!=='string'||!/^https?:\/\/[^\s]+$/i.test(source))return null;try{const url=new URL(source);return ['http:','https:'].includes(url.protocol)&&url.hostname?url.href:null;}catch{return null;}}
+function evidenceCard(id){
+ const e=evidenceById.get(id),card=make('div','evidence-card');card.dataset.evidenceId=id;
+ if(!e){card.append(make('p','muted',`${id} · Evidence unavailable`));return card;}
+ card.dataset.kind=e.kind;card.dataset.status=e.status;card.dataset.accepted=String(e.accepted);
+ const kind=e.kind==='user'?'User evidence':e.kind==='artifact'?'Artifact finding':e.accepted?'Adopted default / assumption':'Assumption';
+ card.append(make('strong','evidence-kind',kind),make('p','evidence-meta',`${e.id} · ${e.accepted?'Accepted':'Not accepted'} · ${e.status==='active'?'Active':'Superseded'}`),make('p','evidence-text',e.text));
+ const source=make('p','evidence-source');source.append(make('span','','Source: '));const url=sourceUrl(e.source);
+ if(url){const link=make('a','',e.source);link.href=url;link.target='_blank';link.rel='noopener noreferrer';source.append(link);}else source.append(make('span','',e.source||t('none')));
+ card.append(source);return card;
+}
+function evidenceDetails(parent,label,ids,{expanded=false,showEmpty=false}={}){
+ const unique=[...new Set(ids||[])];if(!unique.length&&!showEmpty)return;
+ if(!unique.length){recordField(parent,label,t('none'));return;}
+ const group=make('details','evidence-details');group.dataset.evidenceLabel=label;group.open=expanded;group.append(make('summary','',`${label} (${unique.length})`));for(const id of unique)group.append(evidenceCard(id));parent.append(group);
+}
+function recordDetails(item,record,label='Context and provenance'){
+ const extra=make('details','record-details');extra.append(make('summary','',label));
+ recordField(extra,'Revision / round',`${record.revision} / ${record.round}`);
+ recordField(extra,'Proposed by',record.generator_id||t('none'));
+ recordField(extra,'Worker context',record.isolated?'Recorded as isolated':'Not isolated');
+ if(record.targets?.length)recordField(extra,'Addresses',record.targets.map(id=>`${id} · ${allCriteria.get(id)?.description||'Historical check'}`).join('\n'));
+ item.append(extra);return extra;
+}
+function renderQuestion(q){
+ const item=make('div','item question');item.dataset.questionId=q.id;
+ item.append(make('strong','',q.text),make('p','',`${q.id} · ${t(q.status)}`));
+ if(q.options?.length){const choices=make('div','record-field');choices.append(make('span','field-label','Choices offered'));const list=make('ul','question-options');for(const option of q.options)list.append(make('li','',option));choices.append(list);item.append(choices);}
+ if(q.answer_evidence_ids?.length)evidenceDetails(item,'Recorded answer evidence',q.answer_evidence_ids,{expanded:true});else item.append(make('p','muted','No answer recorded.'));
+ const context=recordDetails(item,q);recordField(context,'Why this question',q.why);return item;
+}
+function renderAttempt(attempt){
+ const item=make('div','item resolution-attempt');item.dataset.attemptId=attempt.id;
+ const actions={inspect:'Inspect sources',experiment:'Run experiment',repair:'Repair structure',pause:'Pause'};
+ const statuses={proposed:'Proposed',running:'In progress',completed:'Completed',failed:'Failed',inconclusive:'Inconclusive',skipped:'Skipped'};
+ item.append(make('strong','',actions[attempt.action]||attempt.action),make('p','',`${attempt.id} · ${statuses[attempt.status]||attempt.status}`));
+ recordField(item,'Why',attempt.why);
+ const plan=recordDetails(item,attempt,'Plan and provenance');recordField(plan,'Inspection plan',attempt.inspection);
+ const proposal=attempt.proposal||{};for(const [key,label]of [['question','Question to investigate'],['method','Method'],['stop_condition','Stop condition'],['expected_evidence','Expected evidence'],['informs_decision','Decision informed']])recordField(plan,label,proposal[key]);
+ recordField(item,'Result',attempt.result||(['proposed','running'].includes(attempt.status)?'No result yet.':'No result recorded.'));
+ evidenceDetails(item,'Result evidence',attempt.evidence_ids,{showEmpty:true});return item;
+}
+function renderInterview(){
+ detail.append(make('div','eyebrow',t('snapshot')),make('h2','detail-title',data.source_name),make('p','muted',t('snapshotHint')));
+ if(data.warnings?.length)detail.append(make('div','notice',t('legacy')));
+ section('request',data.request.text);section('success',data.request.success);if(data.request.scope.length)section('scope',data.request.scope);if(data.request.out_of_scope.length)section('outOfScope',data.request.out_of_scope);if(data.summary.blockers.length)section('blockers',data.summary.blockers);
+ const questions=section('questions');if(!data.questions.length)questions.append(make('p','muted',t('emptyQuestions')));for(const q of data.questions)questions.append(renderQuestion(q));
+ const history=section('Resolution history');history.dataset.section='resolution-history';
+ if(!data.attempts?.length)history.append(make('p','muted','No non-question actions recorded.'));for(const attempt of data.attempts||[])history.append(renderAttempt(attempt));
+ section('profile',data.user.preferred_style);
+}
+function renderDetails(){document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tab===detailTab)));detail.replaceChildren();detail.scrollTop=0;if(detailTab==='interview'){renderInterview();return;}
+const n=nodes.get(selected);if(!n)return;detail.append(make('div','detail-id',`${t(n.kind)} · ${n.id}`),make('h2','detail-title',n.title));const chips=make('div','chips');chips.append(make('span','chip',t(n.status)),make('span','chip',n.score===null?t('notScored'):`${t('readiness')} ${Math.round(n.score)}%`));detail.append(chips);if(n.score!==null){const bar=make('div','progress'),fill=make('div','progress-fill');fill.style.width=`${Math.max(0,Math.min(100,n.score))}%`;bar.append(fill);detail.append(bar);}if(!data.summary.has_current_evaluation)detail.append(make('div','notice',t('stale')));if(n.kind==='group')detail.append(make('div','notice',t('groupHint')));taskLinks('parent',n.parent_id?[n.parent_id]:[]);taskLinks('children',n.children);if(n.deliverable||n.kind==='leaf')section('deliverable',n.deliverable);if(n.inputs?.length)section('inputs',n.inputs);if(n.done_when?.length||n.kind==='leaf')section('checks',n.done_when);if(n.verification||n.kind==='leaf')section('verification',n.verification);
+const ownLeaves=descendants.get(n.id)||new Set([n.id]);const before=new Set(),after=new Set();for(const e of dependencies){if(ownLeaves.has(e.target)&&!ownLeaves.has(e.source))before.add(e.source);if(ownLeaves.has(e.source)&&!ownLeaves.has(e.target))after.add(e.target);}taskLinks('before',[...before]);taskLinks('after',[...after]);if(n.requirement_ids.length){const s=section('requirements');for(const id of n.requirement_ids){const r=data.requirements.find(r=>r.id===id),item=make('div','item requirement');item.dataset.requirementId=id;item.append(make('strong','',r?.description||id));evidenceDetails(item,'Requirement evidence',r?.evidence_ids,{showEmpty:true});s.append(item);}}
+if(n.criteria.length){const s=section('criteria');for(const c of n.criteria){const item=make('div','item criterion'),head=make('div','item-head');item.dataset.criterionId=c.id;head.append(make('strong','',c.description),make('span',`rating ${c.score===null||c.score<2?'low':''}`,c.score===null?'—':`${c.score}/2`));item.append(head,make('p','',`${t(c.required?'required':'optional')} · ${c.check}`));if(c.reason)item.append(make('p','',c.reason));if(c.reported_score!==null&&c.reported_score!==c.score)recordField(item,'Evaluator reported',`${c.reported_score}/2 · credited ${c.score}/2`);evidenceDetails(item,'Rating evidence',c.rating_evidence_ids,{showEmpty:true});evidenceDetails(item,'Linked evidence',c.evidence_ids);for(const id of c.decision_ids||[]){const d=allDecisions.get(id);if(d)evidenceDetails(item,`Decision evidence · ${d.question}`,d.evidence_ids,{showEmpty:true});}s.append(item);}}
+if(n.decisions.length){const s=section('decisions');for(const d of n.decisions){const item=make('div','item decision');item.dataset.decisionId=d.id;item.append(make('strong','',d.question),make('p','',`${t(d.status)}${d.value?' · '+d.value:''}`));evidenceDetails(item,'Decision evidence',d.evidence_ids,{showEmpty:true});s.append(item);}}
+}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{detailTab=b.dataset.tab;renderDetails();}));$('#show-details').addEventListener('click',()=>setDetails(!$('#detail').classList.contains('open')));$('#close-details').addEventListener('click',()=>setDetails(false,true));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#detail').classList.contains('open'))setDetails(false,true);});
+draw();renderDetails();document.documentElement.dataset.ready='true';
+})();
+</script>
+</body>
+</html>

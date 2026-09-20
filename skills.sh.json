@@ -4,7 +4,7 @@
     {
       "title": "Common",
       "description": "Skills commonly used across projects.",
-      "skills": ["commit-message"]
+      "skills": ["commit-message", "interview"]
     },
     {
       "title": "Frontend",

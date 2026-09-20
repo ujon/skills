@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1880" viewBox="0 0 1440 1880" role="img" aria-labelledby="title desc">
+<title id="title">Interview workflow: discover, decompose, clarify and refine</title>
+<desc id="desc">A user request is explored through three distinct lenses: desired outcome, possible approaches and necessary conditions. The main-session coordinator uses these to draft a provisional hierarchy of tasks and nested subtasks. Checks are defined for each task, and a fresh evaluator scores the remaining gaps without inherited conversation context. Passing the readiness checks produces detailed requirements and a task hierarchy. Otherwise, a separate fresh questioner selects the next gap. The coordinator either asks the user in the original conversation or resolves the gap from evidence. For a method choice without user input, the coordinator searches the web and adopts a widely used compatible method, recording sources and the default separately from user answers. Other non-user routes inspect facts or repair tasks. The coordinator records action plans and outcomes, updates requirements, and reviews the hierarchy. Changed task inputs require a new evaluation; unchanged inputs retain the current valid result. Solid arrowheads show workflow direction; smaller arrows inside the task panel show parent-to-child relationships. Every connector is straight or orthogonal with at most two bends, and every box has square corners.</desc>
+<defs>
+  <marker id="arrow" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto"><path d="M 1 1 L 11 6 L 1 11 Z" fill="#475c73"/></marker>
+  <marker id="tree-arrow" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="8" markerHeight="8" orient="auto"><path d="M 1 1 L 11 6 L 1 11 Z" fill="#5b74a0"/></marker>
+</defs>
+<style>
+  text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; fill: #172b43; }
+  .edge { fill: none; stroke: #475c73; stroke-width: 2.5; stroke-linecap: butt; stroke-linejoin: miter; marker-end: url(#arrow); }
+  .hierarchy-edge { fill: none; stroke: #5b74a0; stroke-width: 2; stroke-linecap: butt; stroke-linejoin: miter; marker-end: url(#tree-arrow); }
+  .edge-label { font-size: 17px; font-weight: 600; fill: #42566e; paint-order: stroke; stroke: #ffffff; stroke-width: 8px; stroke-linejoin: miter; }
+  .kicker { font-size: 14px; font-weight: 700; letter-spacing: 1.2px; fill: #526984; }
+  .body { font-size: 19px; fill: #52647b; }
+  .node-title { font-size: 23px; font-weight: 600; }
+</style>
+<rect width="1440" height="1880" fill="#ffffff"/>
+<text x="76" y="61" font-size="36" font-weight="700">Interview workflow</text>
+<text x="76" y="94" class="body">Discover what is needed, break it into tasks, and clarify the gaps until the work is well defined.</text>
+
+<polyline id="edge-request-outcome" class="edge" data-source="request" data-target="outcome" points="600,208 600,238 300,238 300,276"/>
+<polyline id="edge-request-approach" class="edge" data-source="request" data-target="approach" points="720,208 720,276"/>
+<polyline id="edge-request-conditions" class="edge" data-source="request" data-target="conditions" points="840,208 840,238 1140,238 1140,276"/>
+<polyline id="edge-outcome-draft" class="edge" data-source="outcome" data-target="draft" points="300,388 300,421 540,421 540,450"/>
+<polyline id="edge-approach-draft" class="edge" data-source="approach" data-target="draft" points="720,388 720,450"/>
+<polyline id="edge-conditions-draft" class="edge" data-source="conditions" data-target="draft" points="1140,388 1140,421 900,421 900,450"/>
+<polyline id="edge-draft-criteria" class="edge" data-source="draft" data-target="criteria" points="720,778 720,838"/>
+<polyline id="edge-criteria-evaluate" class="edge" data-source="criteria" data-target="evaluate" points="720,932 720,988"/>
+<polyline id="edge-evaluate-gate" class="edge" data-source="evaluate" data-target="gate" points="720,1120 720,1170"/>
+<polyline id="edge-gate-complete" class="edge" data-source="gate" data-target="complete" points="940,1213 1110,1213"/>
+<polyline id="edge-gate-questioner" class="edge" data-source="gate" data-target="questioner" points="720,1256 720,1350"/>
+<polyline id="edge-questioner-answer" class="edge" data-source="questioner" data-target="answer" points="720,1482 720,1548"/>
+<polyline id="edge-questioner-evidence" class="edge" data-source="questioner" data-target="evidence" points="970,1416 1110,1416"/>
+<polyline id="edge-answer-refine" class="edge" data-source="answer" data-target="refine" points="720,1646 720,1710"/>
+<polyline id="edge-evidence-refine" class="edge" data-source="evidence" data-target="refine" points="1250,1482 1250,1768 980,1768"/>
+<polyline id="edge-refine-draft" class="edge" data-source="refine" data-target="draft" points="460,1768 76,1768 76,610 270,610"/>
+<g id="node-request" data-node="request">
+<rect x="500" y="132" width="440" height="76" fill="#f8fafc" stroke="#91a3b8" stroke-width="1.5"/>
+<text x="720.0" y="165.0" text-anchor="middle" class="node-title">User request</text>
+<text x="720.0" y="194.0" text-anchor="middle" class="body">Load or resume interview.toml</text>
+</g>
+<g id="node-outcome" data-node="outcome">
+<rect x="120" y="276" width="360" height="112" fill="#f8fafc" stroke="#91a3b8" stroke-width="1.5"/>
+<text x="300.0" y="313.5" text-anchor="middle" font-size="23">Define the desired outcome</text>
+<text x="300.0" y="342.5" text-anchor="middle" class="body">What should change?</text>
+<text x="300.0" y="369.5" text-anchor="middle" class="body">What would success look like?</text>
+</g>
+<g id="node-approach" data-node="approach">
+<rect x="540" y="276" width="360" height="112" fill="#f8fafc" stroke="#91a3b8" stroke-width="1.5"/>
+<text x="720.0" y="313.5" text-anchor="middle" font-size="23">Explore possible approaches</text>
+<text x="720.0" y="342.5" text-anchor="middle" class="body">How could we reach that result?</text>
+<text x="720.0" y="369.5" text-anchor="middle" class="body">Which choices are still open?</text>
+</g>
+<g id="node-conditions" data-node="conditions">
+<rect x="960" y="276" width="360" height="112" fill="#f8fafc" stroke="#91a3b8" stroke-width="1.5"/>
+<text x="1140.0" y="313.5" text-anchor="middle" font-size="23">Identify necessary conditions</text>
+<text x="1140.0" y="342.5" text-anchor="middle" class="body">What is needed to make it work?</text>
+<text x="1140.0" y="369.5" text-anchor="middle" class="body">Which limits must we respect?</text>
+</g>
+<g id="node-draft" data-node="draft">
+<rect x="270" y="450" width="900" height="328" fill="#f5f8ff" stroke="#7e99c0" stroke-width="1.5"/>
+<text x="298" y="480" text-anchor="start" class="kicker">MAIN SESSION · DRAFT THE TASK HIERARCHY</text>
+<text x="720" y="513" text-anchor="middle" class="body">Split again wherever a task is still too broad or unclear.</text>
+<polyline id="edge-main-task-task-a" class="hierarchy-edge" data-source="main-task" data-target="task-a" points="670,585 670,600 540,600 540,623"/>
+<polyline id="edge-main-task-task-b" class="hierarchy-edge" data-source="main-task" data-target="task-b" points="770,585 770,600 1020,600 1020,623"/>
+<polyline id="edge-task-a-subtask-a1" class="hierarchy-edge" data-source="task-a" data-target="subtask-a1" points="480,669 480,689 410,689 410,714"/>
+<polyline id="edge-task-a-subtask-a2" class="hierarchy-edge" data-source="task-a" data-target="subtask-a2" points="600,669 600,689 710,689 710,714"/>
+<g id="node-main-task" data-node="main-task">
+<rect x="620" y="541" width="200" height="44" fill="#e5edfc" stroke="#6f8db9" stroke-width="1.5"/>
+<text x="720.0" y="571.5" text-anchor="middle" font-size="21">Main task</text>
+</g>
+<g id="node-task-a" data-node="task-a">
+<rect x="420" y="623" width="240" height="46" fill="#ffffff" stroke="#90a7c9" stroke-width="1.5"/>
+<text x="540.0" y="654.5" text-anchor="middle" font-size="21">Task A</text>
+</g>
+<g id="node-task-b" data-node="task-b">
+<rect x="900" y="623" width="240" height="46" fill="#ffffff" stroke="#90a7c9" stroke-width="1.5"/>
+<text x="1020.0" y="654.5" text-anchor="middle" font-size="21">Task B</text>
+</g>
+<g id="node-subtask-a1" data-node="subtask-a1">
+<rect x="300" y="714" width="220" height="44" fill="#ffffff" stroke="#90a7c9" stroke-width="1.5"/>
+<text x="410.0" y="744.5" text-anchor="middle" font-size="20">Subtask A.1</text>
+</g>
+<g id="node-subtask-a2" data-node="subtask-a2">
+<rect x="600" y="714" width="220" height="44" fill="#ffffff" stroke="#90a7c9" stroke-width="1.5"/>
+<text x="710.0" y="744.5" text-anchor="middle" font-size="20">Subtask A.2</text>
+</g>
+<text x="1020" y="727" text-anchor="middle" class="body" font-size="17">Parent → child</text>
+<text x="1020" y="752" text-anchor="middle" class="body" font-size="17">Further levels as needed</text>
+</g>
+<g id="node-criteria" data-node="criteria">
+<rect x="490" y="838" width="460" height="94" fill="#f8fafc" stroke="#91a3b8" stroke-width="1.5"/>
+<text x="720.0" y="866.5" text-anchor="middle" font-size="23">Define checks for each task</text>
+<text x="720.0" y="895.5" text-anchor="middle" class="body">What must be known or decided?</text>
+<text x="720.0" y="922.5" text-anchor="middle" class="body">Record facts, choices and remaining gaps.</text>
+</g>
+<g id="node-evaluate" data-node="evaluate">
+<rect x="445" y="988" width="550" height="132" fill="#f0faf7" stroke="#7bac9c" stroke-width="1.5"/>
+<text x="467" y="1016" text-anchor="start" class="kicker">FRESH EVALUATOR · NO INHERITED CHAT</text>
+<text x="720.0" y="1055" text-anchor="middle" class="node-title">Evaluate the remaining gaps</text>
+<text x="720.0" y="1084" text-anchor="middle" class="body">Score evidence against the task checks.</text>
+<text x="720.0" y="1111" text-anchor="middle" class="body">Reuse its result if task inputs are unchanged.</text>
+</g>
+<g id="node-gate" data-node="gate">
+<rect x="500" y="1170" width="440" height="86" fill="#fff8e9" stroke="#c99640" stroke-width="1.5"/>
+<text x="720.0" y="1208.0" text-anchor="middle" font-size="23">Are the required details clear?</text>
+<text x="720.0" y="1237.0" text-anchor="middle" class="body">Apply the readiness checks.</text>
+</g>
+<g id="node-complete" data-node="complete">
+<rect x="1110" y="1145" width="280" height="136" fill="#ecf8ef" stroke="#65a57a" stroke-width="1.5"/>
+<text x="1250.0" y="1194.5" text-anchor="middle" font-size="23">Interview complete</text>
+<text x="1250.0" y="1223.5" text-anchor="middle" class="body">Detailed requirements</text>
+<text x="1250.0" y="1250.5" text-anchor="middle" class="body">Task and subtask hierarchy</text>
+</g>
+<g id="node-questioner" data-node="questioner">
+<rect x="470" y="1350" width="500" height="132" fill="#f1f5ff" stroke="#849cc8" stroke-width="1.5"/>
+<text x="492" y="1378" text-anchor="start" class="kicker">FRESH QUESTIONER · NO INHERITED CHAT</text>
+<text x="720.0" y="1417" text-anchor="middle" font-size="23">Choose the next gap to resolve</text>
+<text x="720.0" y="1446" text-anchor="middle" class="body">Prepare one plain question when</text>
+<text x="720.0" y="1473" text-anchor="middle" class="body">an answer from the user is needed.</text>
+</g>
+<g id="node-evidence" data-node="evidence">
+<rect x="1110" y="1350" width="280" height="132" fill="#f8fafc" stroke="#91a3b8" stroke-width="1.5"/>
+<text x="1250.0" y="1397.5" text-anchor="middle" font-size="22">Resolve from evidence</text>
+<text x="1250.0" y="1426.5" text-anchor="middle" class="body">Search the web; check fit.</text>
+<text x="1250.0" y="1453.5" text-anchor="middle" class="body">Inspect facts or repair tasks.</text>
+</g>
+<g id="node-answer" data-node="answer">
+<rect x="490" y="1548" width="460" height="98" fill="#f8fafc" stroke="#91a3b8" stroke-width="1.5"/>
+<text x="720.0" y="1578.5" text-anchor="middle" font-size="23">Ask and hear the user&#x27;s answer</text>
+<text x="720.0" y="1607.5" text-anchor="middle" class="body">Use easy words; adapt as needed.</text>
+<text x="720.0" y="1634.5" text-anchor="middle" class="body">Stay in the original conversation.</text>
+</g>
+<g id="node-refine" data-node="refine">
+<rect x="460" y="1710" width="520" height="118" fill="#f0faf7" stroke="#7bac9c" stroke-width="1.5"/>
+<text x="720.0" y="1750.5" text-anchor="middle" font-size="23">Refine requirements and reshape tasks</text>
+<text x="720.0" y="1779.5" text-anchor="middle" class="body">Revisit the outcome, approach and conditions.</text>
+<text x="720.0" y="1806.5" text-anchor="middle" class="body">Save task changes, evidence and attempt history.</text>
+</g>
+<text x="1025" y="1197" text-anchor="middle" class="edge-label">Yes</text>
+<text x="743" y="1307" text-anchor="start" class="edge-label">No · unresolved gaps remain</text>
+<text x="743" y="1522" text-anchor="start" class="edge-label">User input needed</text>
+<text x="1040" y="1395" text-anchor="middle" class="edge-label" font-size="16">No user input</text>
+<text x="92" y="590" text-anchor="start" class="edge-label">Rebuild the draft</text>
+<text x="110" y="1748" text-anchor="start" class="edge-label">Refine and repeat</text>
+<text x="76" y="1864" text-anchor="start" class="body" font-size="17">Shared state: interview.toml · Each new evaluation or question uses a fresh session.</text>
+</svg>
